@@ -83,6 +83,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
+    marginTop: 34,
   },
   stepContainer: {
     gap: 8,

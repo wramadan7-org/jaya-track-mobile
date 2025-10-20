@@ -9,7 +9,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import { useMemo, useState } from "react";
 
-export default function BroughtScreen() {
+export default function SaleScreenScreen() {
   const { products, deleteProduct } = useProductStore();
 
   const [disableAction, setDisableAction] = useState(false);
@@ -38,7 +38,7 @@ export default function BroughtScreen() {
                 fontFamily: Fonts.rounded,
               }}
             >
-              📦 Barang yang dibawa
+              📦 Barang Terjual
             </ThemedText>
           </ThemedView>
           <Link

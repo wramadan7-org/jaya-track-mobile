@@ -53,6 +53,7 @@ export default function ParallaxScrollView({
       ref={scrollRef}
       style={{ backgroundColor, flex: 1 }}
       scrollEventThrottle={16}
+      nestedScrollEnabled
     >
       {headerImage && headerBackgroundColor && (
         <Animated.View
@@ -80,7 +81,8 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    padding: 32,
+    paddingHorizontal: 32,
+    paddingVertical: 36,
     gap: 16,
     overflow: "hidden",
   },

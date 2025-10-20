@@ -1,17 +1,40 @@
 import type { Product } from "@/stores/product-store";
 import { useProductStore } from "@/stores/product-store";
-import { useState } from "react";
-import { Alert, Button, StyleSheet, TextInput } from "react-native";
+import { useEffect, useState } from "react";
+import { Alert, Button, StyleSheet } from "react-native";
+import { ThemedTextInput } from "../themed-text-input";
 import { ThemedView } from "../themed-view";
 
-export const ProductFormComponent = () => {
-  const { addProduct } = useProductStore();
+type ProductFormProps = {
+  initialData?: Product;
+  isEditMode?: boolean;
+  id?: string;
+};
 
-  const [formProduct, setFormProduct] = useState<Omit<Product, "id">>({
+export const ProductFormComponent = ({
+  initialData,
+  isEditMode = false,
+  id,
+}: ProductFormProps) => {
+  const { addProduct, updateProduct } = useProductStore();
+
+  const [formProduct, setFormProduct] = useState<
+    Omit<Product, "id" | "createdAt" | "updatedAt">
+  >({
     name: "",
     qty: 0,
     price: 0,
   });
+
+  useEffect(() => {
+    if (initialData) {
+      setFormProduct({
+        name: initialData.name,
+        qty: initialData.qty,
+        price: initialData.price,
+      });
+    }
+  }, [initialData]);
 
   const handleChange = (
     field: keyof Omit<Product, "id">,
@@ -29,12 +52,16 @@ export const ProductFormComponent = () => {
       return;
     }
 
-    addProduct({
-      id: crypto.randomUUID(),
-      ...formProduct,
-    });
-
-    Alert.alert("Sukses", "Barang berhasil ditambahkan");
+    if (isEditMode && id) {
+      updateProduct(id, formProduct);
+      Alert.alert("Sukses", "Barang berhasil diperbarui");
+    } else {
+      addProduct({
+        id: Date.now().toString(),
+        ...formProduct,
+      });
+      Alert.alert("Sukses", "Barang berhasil ditambahkan");
+    }
 
     setFormProduct({
       name: "",
@@ -44,23 +71,23 @@ export const ProductFormComponent = () => {
   };
 
   return (
-    <ThemedView>
-      <TextInput
+    <ThemedView style={styles.container}>
+      <ThemedTextInput
         style={styles.input}
         placeholder="Nama Barang"
         value={formProduct.name}
         onChangeText={(text) => handleChange("name", text)}
       />
-      <TextInput
+      <ThemedTextInput
         style={styles.input}
         placeholder="Jumlah (Qty)"
         value={formProduct.qty ? formProduct.qty.toString() : ""}
         onChangeText={(text) => handleChange("qty", Number(text))}
         keyboardType="numeric"
       />
-      <TextInput
+      <ThemedTextInput
         style={styles.input}
-        placeholder="Harga per item"
+        placeholder="Harga per losin"
         value={formProduct.price ? formProduct.price.toString() : ""}
         onChangeText={(text) => handleChange("price", Number(text))}
         keyboardType="numeric"
@@ -71,6 +98,9 @@ export const ProductFormComponent = () => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    width: "100%",
+  },
   input: {
     borderWidth: 1,
     borderColor: "#ccc",
@@ -78,5 +108,6 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 15,
     fontSize: 16,
+    width: "auto",
   },
 });
