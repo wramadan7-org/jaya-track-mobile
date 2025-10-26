@@ -5,8 +5,13 @@ import { persist } from "zustand/middleware";
 export type Product = {
   id: string;
   name: string;
-  qty: number;
-  price: number;
+  fillPerSack: number;
+  basePricePerDozens: number;
+  basePricePerSack: number;
+  targetPricePerDozens: number;
+  targetPricePerSack: number;
+  qtyDozens: number;
+  qtySack: number;
   createdAt: Date;
   updatedAt: Date;
 };

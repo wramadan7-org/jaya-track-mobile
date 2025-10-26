@@ -31,7 +31,7 @@ export function FlatListScrollView<T>({
   const backgroundColor = useThemeColor({}, "background");
 
   return (
-    <ThemedView>
+    <ThemedView style={[styles.container]}>
       <FlatList
         {...flatListProps}
         ListHeaderComponent={
@@ -59,6 +59,9 @@ export function FlatListScrollView<T>({
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   headerContainer: {
     zIndex: 10,
     paddingVertical: 34,
@@ -70,6 +73,8 @@ const styles = StyleSheet.create({
   },
   footerContainer: {
     paddingVertical: 24,
+    borderWidth: 2,
+    borderColor: "red",
   },
   footerFixed: {
     position: "absolute",
@@ -77,7 +82,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     paddingVertical: 16,
-    paddingHorizontal: 20,
+    paddingHorizontal: 32,
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: "#ccc",
     shadowColor: "#000",

@@ -51,9 +51,15 @@ export default function ParallaxScrollView({
   return (
     <Animated.ScrollView
       ref={scrollRef}
-      style={{ backgroundColor, flex: 1 }}
+      style={{ backgroundColor, flexGrow: 1 }}
       scrollEventThrottle={16}
       nestedScrollEnabled
+      keyboardShouldPersistTaps="handled"
+      contentContainerStyle={{
+        flexGrow: 1,
+        paddingBottom: 36,
+        gap: 16,
+      }}
     >
       {headerImage && headerBackgroundColor && (
         <Animated.View
