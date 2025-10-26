@@ -1,7 +1,6 @@
 import ParallaxScrollView from "@/components/parallax-scroll-view";
 import { useProductStore } from "@/stores/product-store";
 import { useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -16,21 +15,6 @@ import { ThemedView } from "../components/themed-view";
 export default function FormProductModalScreen() {
   const { id } = useLocalSearchParams<{ id?: string }>();
   const { products } = useProductStore();
-
-  const [keyboardVisible, setKeyboardVisible] = useState(false);
-
-  useEffect(() => {
-    const showSub = Keyboard.addListener("keyboardDidShow", () =>
-      setKeyboardVisible(true)
-    );
-    const hideSub = Keyboard.addListener("keyboardDidHide", () =>
-      setKeyboardVisible(false)
-    );
-    return () => {
-      showSub.remove();
-      hideSub.remove();
-    };
-  }, []);
 
   const productToEdit = id ? products.find((p) => p.id === id) : undefined;
 

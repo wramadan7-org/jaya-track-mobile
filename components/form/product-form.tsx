@@ -1,7 +1,7 @@
 import type { Product } from "@/stores/product-store";
 import { useProductStore } from "@/stores/product-store";
 import { useEffect, useState } from "react";
-import { Alert, Button, StyleSheet, View } from "react-native";
+import { Alert, Pressable, StyleSheet, View } from "react-native";
 import { ThemedText } from "../themed-text";
 import { ThemedTextInput } from "../themed-text-input";
 import { ThemedView } from "../themed-view";
@@ -130,6 +130,14 @@ export const ProductFormComponent = ({
   };
 
   const isFillSet = formProduct.fillPerSack > 0;
+  const fill = formProduct.fillPerSack;
+  const dozens = formProduct.qtyDozens;
+  const unitSak = Math.floor(dozens / fill);
+  const remaining = dozens % fill;
+
+  const displayText = `${unitSak} sak${
+    remaining ? ` lebih ${remaining} losin` : ""
+  }`;
 
   return (
     <ThemedView style={styles.container}>
@@ -189,6 +197,14 @@ export const ProductFormComponent = ({
               onChangeText={(text) => handleChange("qtySack", Number(text))}
               keyboardType="numeric"
             />
+            {formProduct.qtySack > 0 && remaining > 0 && (
+              <ThemedText
+                type="subtitle"
+                style={{ fontSize: 9, color: "#dbd94eff", marginTop: -22.5 }}
+              >
+                {displayText}
+              </ThemedText>
+            )}
           </View>
         </View>
         <View style={styles.inputGroup}>
@@ -266,7 +282,12 @@ export const ProductFormComponent = ({
           </View>
         </View>
       </View>
-      <Button title="Simpan Barang" onPress={handleSubmit} />
+      <Pressable
+        onPress={handleSubmit}
+        style={[styles.button, styles.buttonAdd]}
+      >
+        <ThemedText style={[styles.centerText]}>Simpan Barang</ThemedText>
+      </Pressable>
     </ThemedView>
   );
 };
@@ -307,5 +328,16 @@ const styles = StyleSheet.create({
     borderColor: "#ccc",
     padding: 10,
     gap: 10,
+  },
+  button: {
+    borderRadius: 8,
+    padding: 10,
+    flex: 1,
+  },
+  buttonAdd: {
+    backgroundColor: "#007AFF",
+  },
+  centerText: {
+    textAlign: "center",
   },
 });

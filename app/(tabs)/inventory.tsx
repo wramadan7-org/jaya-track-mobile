@@ -39,7 +39,7 @@ export default function BroughtScreen() {
                 fontFamily: Fonts.rounded,
               }}
             >
-              📦 Barang yang dibawa
+              📦 Muatan Barang
             </ThemedText>
           </ThemedView>
           <Link
@@ -61,7 +61,10 @@ export default function BroughtScreen() {
         <ThemedView style={styles.productCard}>
           <ThemedText type="defaultSemiBold">Nama: {item.name}</ThemedText>
           <ThemedText type="defaultSemiBold">
-            Jumlah: {item.qtyDozens} losin / {item.qtySack} sak
+            Jumlah: {item.qtyDozens} losin / {Math.floor(item.qtySack)} sak{" "}
+            {item.qtySack > 0 && item.qtyDozens % item.fillPerSack !== 0
+              ? `(+ ${item.qtyDozens % item.fillPerSack} losin)`
+              : ""}
           </ThemedText>
           <ThemedView
             style={{
