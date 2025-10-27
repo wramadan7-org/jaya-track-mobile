@@ -149,136 +149,136 @@ export const ProductFormComponent = ({
           value={formProduct.name}
           onChangeText={(text) => handleChange("name", text)}
         />
+      </View>
+      <View style={[styles.inputContainer]}>
+        <ThemedText type="defaultSemiBold">
+          Isi per sak (satuan: losin)
+        </ThemedText>
+        <ThemedTextInput
+          style={styles.input}
+          placeholder="10"
+          value={
+            formProduct.fillPerSack ? formProduct.fillPerSack.toString() : ""
+          }
+          onChangeText={(text) => handleChangeFillPerSack(text)}
+          keyboardType="numeric"
+        />
+      </View>
+      <View style={styles.inputWrapper}>
         <View style={[styles.inputContainer]}>
-          <ThemedText type="defaultSemiBold">
-            Isi per sak (satuan: losin)
+          <ThemedText
+            type="defaultSemiBold"
+            style={!isFillSet && styles.disabledLabel}
+          >
+            Jumlah losin
           </ThemedText>
           <ThemedTextInput
-            style={styles.input}
+            style={[styles.input, !isFillSet && styles.disabledInput]}
+            editable={isFillSet}
             placeholder="10"
             value={
-              formProduct.fillPerSack ? formProduct.fillPerSack.toString() : ""
+              formProduct.qtyDozens ? formProduct.qtyDozens.toString() : ""
             }
-            onChangeText={(text) => handleChangeFillPerSack(text)}
+            onChangeText={(text) => handleChange("qtyDozens", Number(text))}
             keyboardType="numeric"
           />
         </View>
+        <View style={[styles.inputContainer]}>
+          <ThemedText
+            type="defaultSemiBold"
+            style={!isFillSet && styles.disabledLabel}
+          >
+            Jumlah sak
+          </ThemedText>
+          <ThemedTextInput
+            style={[styles.input, !isFillSet && styles.disabledInput]}
+            editable={isFillSet}
+            placeholder="1"
+            value={formProduct.qtySack ? formProduct.qtySack.toString() : ""}
+            onChangeText={(text) => handleChange("qtySack", Number(text))}
+            keyboardType="numeric"
+          />
+          {formProduct.qtySack > 0 && remaining > 0 && (
+            <ThemedText
+              type="subtitle"
+              style={{ fontSize: 9, color: "#dbd94eff", marginTop: -22.5 }}
+            >
+              {displayText}
+            </ThemedText>
+          )}
+        </View>
+      </View>
+      <View style={styles.inputGroup}>
+        <ThemedText type="defaultSemiBold">Harga Dasar</ThemedText>
         <View style={styles.inputWrapper}>
           <View style={[styles.inputContainer]}>
-            <ThemedText
-              type="defaultSemiBold"
-              style={!isFillSet && styles.disabledLabel}
-            >
-              Jumlah losin
-            </ThemedText>
+            <ThemedText type="defaultSemiBold">Losin</ThemedText>
             <ThemedTextInput
-              style={[styles.input, !isFillSet && styles.disabledInput]}
-              editable={isFillSet}
-              placeholder="10"
+              style={styles.input}
+              placeholder="15000"
               value={
-                formProduct.qtyDozens ? formProduct.qtyDozens.toString() : ""
+                formProduct.basePricePerDozens
+                  ? formProduct.basePricePerDozens.toString()
+                  : ""
               }
-              onChangeText={(text) => handleChange("qtyDozens", Number(text))}
+              onChangeText={(text) =>
+                handleChange("basePricePerDozens", Number(text))
+              }
               keyboardType="numeric"
             />
           </View>
           <View style={[styles.inputContainer]}>
-            <ThemedText
-              type="defaultSemiBold"
-              style={!isFillSet && styles.disabledLabel}
-            >
-              Jumlah sak
-            </ThemedText>
+            <ThemedText type="defaultSemiBold">Sak</ThemedText>
             <ThemedTextInput
-              style={[styles.input, !isFillSet && styles.disabledInput]}
-              editable={isFillSet}
-              placeholder="1"
-              value={formProduct.qtySack ? formProduct.qtySack.toString() : ""}
-              onChangeText={(text) => handleChange("qtySack", Number(text))}
+              style={styles.input}
+              placeholder="83000"
+              value={
+                formProduct.basePricePerSack
+                  ? formProduct.basePricePerSack.toString()
+                  : ""
+              }
+              onChangeText={(text) =>
+                handleChange("basePricePerSack", Number(text))
+              }
               keyboardType="numeric"
             />
-            {formProduct.qtySack > 0 && remaining > 0 && (
-              <ThemedText
-                type="subtitle"
-                style={{ fontSize: 9, color: "#dbd94eff", marginTop: -22.5 }}
-              >
-                {displayText}
-              </ThemedText>
-            )}
           </View>
         </View>
-        <View style={styles.inputGroup}>
-          <ThemedText type="defaultSemiBold">Harga Dasar</ThemedText>
-          <View style={styles.inputWrapper}>
-            <View style={[styles.inputContainer]}>
-              <ThemedText type="defaultSemiBold">Losin</ThemedText>
-              <ThemedTextInput
-                style={styles.input}
-                placeholder="15000"
-                value={
-                  formProduct.basePricePerDozens
-                    ? formProduct.basePricePerDozens.toString()
-                    : ""
-                }
-                onChangeText={(text) =>
-                  handleChange("basePricePerDozens", Number(text))
-                }
-                keyboardType="numeric"
-              />
-            </View>
-            <View style={[styles.inputContainer]}>
-              <ThemedText type="defaultSemiBold">Sak</ThemedText>
-              <ThemedTextInput
-                style={styles.input}
-                placeholder="83000"
-                value={
-                  formProduct.basePricePerSack
-                    ? formProduct.basePricePerSack.toString()
-                    : ""
-                }
-                onChangeText={(text) =>
-                  handleChange("basePricePerSack", Number(text))
-                }
-                keyboardType="numeric"
-              />
-            </View>
+      </View>
+      <View style={styles.inputGroup}>
+        <ThemedText type="defaultSemiBold">Harga Target</ThemedText>
+        <View style={styles.inputWrapper}>
+          <View style={[styles.inputContainer]}>
+            <ThemedText type="defaultSemiBold">Losin</ThemedText>
+            <ThemedTextInput
+              style={styles.input}
+              placeholder="15000"
+              value={
+                formProduct.targetPricePerDozens
+                  ? formProduct.targetPricePerDozens.toString()
+                  : ""
+              }
+              onChangeText={(text) =>
+                handleChange("targetPricePerDozens", Number(text))
+              }
+              keyboardType="numeric"
+            />
           </View>
-        </View>
-        <View style={styles.inputGroup}>
-          <ThemedText type="defaultSemiBold">Harga Target</ThemedText>
-          <View style={styles.inputWrapper}>
-            <View style={[styles.inputContainer]}>
-              <ThemedText type="defaultSemiBold">Losin</ThemedText>
-              <ThemedTextInput
-                style={styles.input}
-                placeholder="15000"
-                value={
-                  formProduct.targetPricePerDozens
-                    ? formProduct.targetPricePerDozens.toString()
-                    : ""
-                }
-                onChangeText={(text) =>
-                  handleChange("targetPricePerDozens", Number(text))
-                }
-                keyboardType="numeric"
-              />
-            </View>
-            <View style={[styles.inputContainer]}>
-              <ThemedText type="defaultSemiBold">Sak</ThemedText>
-              <ThemedTextInput
-                style={styles.input}
-                placeholder="83000"
-                value={
-                  formProduct.targetPricePerSack
-                    ? formProduct.targetPricePerSack.toString()
-                    : ""
-                }
-                onChangeText={(text) =>
-                  handleChange("targetPricePerSack", Number(text))
-                }
-                keyboardType="numeric"
-              />
-            </View>
+          <View style={[styles.inputContainer]}>
+            <ThemedText type="defaultSemiBold">Sak</ThemedText>
+            <ThemedTextInput
+              style={styles.input}
+              placeholder="83000"
+              value={
+                formProduct.targetPricePerSack
+                  ? formProduct.targetPricePerSack.toString()
+                  : ""
+              }
+              onChangeText={(text) =>
+                handleChange("targetPricePerSack", Number(text))
+              }
+              keyboardType="numeric"
+            />
           </View>
         </View>
       </View>
