@@ -45,8 +45,8 @@ export function FlatListScrollView<T>({
         contentContainerStyle={[
           styles.contentContainer,
           containerStyle,
-          flatListProps.contentContainerStyle,
           stickyFooter ? { paddingBottom: 100 } : null,
+          flatListProps.contentContainerStyle,
         ]}
         style={[{ backgroundColor }, flatListProps.style]}
       />

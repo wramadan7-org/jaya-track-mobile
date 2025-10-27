@@ -39,6 +39,14 @@ export default function RootLayout() {
               statusBarHidden: true,
             }}
           />
+          <Stack.Screen
+            name="form-sale-modal"
+            options={{
+              presentation: "modal",
+              title: "",
+              statusBarHidden: true,
+            }}
+          />
         </Stack>
         <StatusBar style="auto" />
       </ThemeProvider>

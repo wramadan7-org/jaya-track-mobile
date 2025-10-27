@@ -284,7 +284,7 @@ export const ProductFormComponent = ({
       </View>
       <Pressable
         onPress={handleSubmit}
-        style={[styles.button, styles.buttonAdd]}
+        style={[styles.button, styles.buttonSubmit]}
       >
         <ThemedText style={[styles.centerText]}>Simpan Barang</ThemedText>
       </Pressable>
@@ -334,8 +334,8 @@ const styles = StyleSheet.create({
     padding: 10,
     flex: 1,
   },
-  buttonAdd: {
-    backgroundColor: "#007AFF",
+  buttonSubmit: {
+    backgroundColor: "#34C759",
   },
   centerText: {
     textAlign: "center",
