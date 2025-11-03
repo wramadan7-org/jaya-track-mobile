@@ -59,13 +59,44 @@ export default function BroughtScreen() {
       }
       renderItem={({ item }) => (
         <ThemedView style={styles.productCard}>
-          <ThemedText type="defaultSemiBold">Nama: {item.name}</ThemedText>
-          <ThemedText type="defaultSemiBold">
-            Jumlah: {item.qtyDozens} losin / {Math.floor(item.qtySack)} sak{" "}
-            {item.qtySack > 0 && item.qtyDozens % item.fillPerSack !== 0
-              ? `(+ ${item.qtyDozens % item.fillPerSack} losin)`
-              : ""}
-          </ThemedText>
+          <ThemedView
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <ThemedView>
+              <ThemedText type="defaultSemiBold">Nama: {item.name}</ThemedText>
+              <ThemedText type="defaultSemiBold">
+                Jumlah: {item.qtyDozens} losin / {Math.floor(item.qtySack)} sak{" "}
+                {item.qtySack > 0 && item.qtyDozens % item.fillPerSack !== 0
+                  ? `(+ ${item.qtyDozens % item.fillPerSack} losin)`
+                  : ""}
+              </ThemedText>
+            </ThemedView>
+            <ThemedText
+              type="defaultSemiBold"
+              style={{
+                fontSize: 12,
+                backgroundColor:
+                  item.qtyDozens === 0 && item.qtySack === 0
+                    ? "#FF3B3020"
+                    : "#34C75920",
+                paddingHorizontal: 6,
+                paddingVertical: 2,
+                borderRadius: 4,
+                color:
+                  item.qtyDozens === 0 && item.qtySack === 0
+                    ? "#FF3B30"
+                    : "#34C759",
+              }}
+            >
+              {item.qtyDozens === 0 && item.qtySack === 0
+                ? "Habis"
+                : "Tersedia"}
+            </ThemedText>
+          </ThemedView>
           <ThemedView
             style={{
               gap: 4,
