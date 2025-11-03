@@ -2,7 +2,7 @@ import { Product, useProductStore } from "@/stores/product-store";
 import { useSalesStore, type Sale } from "@/stores/sales-store";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import { Alert, Pressable, StyleSheet, View } from "react-native";
 import { ThemedPicker } from "../themed-picker";
 import { ThemedText } from "../themed-text";
 import { ThemedTextInput } from "../themed-text-input";
@@ -164,15 +164,27 @@ export const SaleFormComponent = ({
   };
 
   const handleSubmit = () => {
-    if (isEditMode && id) {
-      updateSale(id, formSale);
-    } else {
-      const newSale = {
-        store: formSale.store,
-        area: formSale.area,
-        items: formSale.items,
-      };
-      addSale({ ...newSale, id: Date.now().toString() });
+    try {
+      if (isEditMode && id) {
+        updateSale(id, formSale);
+        Alert.alert("Sukses", "Penjualan berhasil diperbarui");
+      } else {
+        const newSale = {
+          store: formSale.store,
+          area: formSale.area,
+          items: formSale.items,
+        };
+        addSale({ ...newSale, id: Date.now().toString() });
+        setFormSale({
+          store: "",
+          area: "",
+          items: [],
+          totalAmount: 0,
+        });
+        Alert.alert("Sukses", "Penjualan berhasil ditambahkan");
+      }
+    } catch {
+      Alert.alert("Error", "Terjadi kesalahan saat menyimpan penjualan");
     }
   };
 

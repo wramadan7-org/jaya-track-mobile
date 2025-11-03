@@ -88,45 +88,48 @@ export const ProductFormComponent = ({
       fillPerSack,
     } = formProduct;
 
-    if (!name || !fillPerSack) {
-      Alert.alert(
-        "Form tidak lengkap",
-        "Nama barang dan isi per sak wajib diisi"
-      );
-      return;
-    }
+    try {
+      if (!name || !fillPerSack) {
+        Alert.alert(
+          "Form tidak lengkap",
+          "Nama barang dan isi per sak wajib diisi"
+        );
+        return;
+      }
 
-    if (!qtyDozens && !qtySack) {
-      Alert.alert("Form tidak lengkap", "Isi jumlah losin atau jumlah sak");
-      return;
-    }
+      if (!qtyDozens && !qtySack) {
+        Alert.alert("Form tidak lengkap", "Isi jumlah losin atau jumlah sak");
+        return;
+      }
 
-    if (!basePricePerDozens || !basePricePerSack) {
-      Alert.alert("Form tidak lengkap", "Harga barang belum diisi");
-      return;
-    }
+      if (!basePricePerDozens || !basePricePerSack) {
+        Alert.alert("Form tidak lengkap", "Harga barang belum diisi");
+        return;
+      }
 
-    if (isEditMode && id) {
-      updateProduct(id, formProduct);
-      Alert.alert("Sukses", "Barang berhasil diperbarui");
-    } else {
-      addProduct({
-        id: Date.now().toString(),
-        ...formProduct,
-      });
-      Alert.alert("Sukses", "Barang berhasil ditambahkan");
+      if (isEditMode && id) {
+        updateProduct(id, formProduct);
+        Alert.alert("Sukses", "Barang berhasil diperbarui");
+      } else {
+        addProduct({
+          id: Date.now().toString(),
+          ...formProduct,
+        });
+        setFormProduct({
+          name: "",
+          qtyDozens: 0,
+          qtySack: 0,
+          basePricePerDozens: 0,
+          basePricePerSack: 0,
+          targetPricePerDozens: 0,
+          targetPricePerSack: 0,
+          fillPerSack: 0,
+        });
+        Alert.alert("Sukses", "Barang berhasil ditambahkan");
+      }
+    } catch {
+      Alert.alert("Error", "Terjadi kesalahan saat menyimpan barang");
     }
-
-    setFormProduct({
-      name: "",
-      qtyDozens: 0,
-      qtySack: 0,
-      basePricePerDozens: 0,
-      basePricePerSack: 0,
-      targetPricePerDozens: 0,
-      targetPricePerSack: 0,
-      fillPerSack: 0,
-    });
   };
 
   const isFillSet = formProduct.fillPerSack > 0;
