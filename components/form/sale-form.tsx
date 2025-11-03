@@ -165,6 +165,41 @@ export const SaleFormComponent = ({
 
   const handleSubmit = () => {
     try {
+      if (formSale.items.length === 0) {
+        Alert.alert("Error", "Harap tambahkan minimal satu item penjualan");
+        return;
+      }
+
+      const invalidItem = formSale.items.find(
+        (item) => !item.name || item.qtySold <= 0 || item.amountSold <= 0
+      );
+
+      if (invalidItem) {
+        Alert.alert(
+          "Error",
+          "Harap lengkapi semua data item penjualan dengan benar"
+        );
+        return;
+      }
+
+      const invalidItemQty = formSale.items.find((item) => {
+        const product = products.find((p) => p.name === item.name);
+        if (!product) return true;
+        if (item.unitType === "dozens") {
+          return item.qtySold > product.qtyDozens;
+        } else {
+          return item.qtySold > product.qtySack;
+        }
+      });
+
+      if (invalidItemQty) {
+        Alert.alert(
+          "Error",
+          `Stok tidak mencukupi untuk barang: ${invalidItemQty.name}`
+        );
+        return;
+      }
+
       if (isEditMode && id) {
         updateSale(id, formSale);
         Alert.alert("Sukses", "Penjualan berhasil diperbarui");
@@ -209,7 +244,9 @@ export const SaleFormComponent = ({
         />
       </View>
       <View style={{ gap: 15 }}>
-        <ThemedText type="defaultSemiBold">Item Penjualan</ThemedText>
+        {!!formSale.items.length && (
+          <ThemedText type="defaultSemiBold">Item Penjualan</ThemedText>
+        )}
         {formSale.items.map((item, index) => (
           <View
             key={`sale-item-${index}`}
