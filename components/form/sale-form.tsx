@@ -298,6 +298,17 @@ export const SaleFormComponent = ({
                   handleItemChange(index, "qtySold", text)
                 }
               />
+              {item.name && (
+                <ThemedText
+                  type="default"
+                  style={{ fontSize: 12, marginTop: -25, color: "#b7b477ff" }}
+                >
+                  Stok tersedia:{" "}
+                  {item.unitType === "dozens"
+                    ? item.qtyDozens + " losin"
+                    : item.qtySack + " sak"}
+                </ThemedText>
+              )}
             </View>
             <View style={[styles.inputContainer]}>
               <ThemedText type="defaultSemiBold">Tipe Satuan</ThemedText>
