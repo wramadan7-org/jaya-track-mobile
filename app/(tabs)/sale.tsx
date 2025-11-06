@@ -28,7 +28,7 @@ export default function SaleScreenScreen() {
 
   const sortSalesByUpdatedAt = useMemo(() => {
     return [...sales].sort(
-      (a, b) => b.updatedAt.getTime() - a.updatedAt.getTime()
+      (a, b) => b?.updatedAt?.getTime() - a?.updatedAt?.getTime()
     );
   }, [sales]);
 

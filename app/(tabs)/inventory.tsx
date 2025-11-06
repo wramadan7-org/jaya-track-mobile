@@ -21,15 +21,15 @@ export default function BroughtScreen() {
 
   const sortProductsByUpdatedAt = useMemo(() => {
     return [...products].sort((a, b) => {
-      const aHasStock = a.qtySack > 0 || a.qtyDozens > 0;
-      const bHasStock = b.qtySack > 0 || b.qtyDozens > 0;
+      const aHasStock = a?.qtySack > 0 || a?.qtyDozens > 0;
+      const bHasStock = b?.qtySack > 0 || b?.qtyDozens > 0;
 
       // Barang dengan stok masih ada di atas
       if (aHasStock && !bHasStock) return -1;
       if (!aHasStock && bHasStock) return 1;
 
       // Jika stok sama-sama ada atau sama-sama habis, urutkan berdasarkan updatedAt
-      return b.updatedAt.getTime() - a.updatedAt.getTime();
+      return b?.updatedAt?.getTime() - a?.updatedAt?.getTime();
     });
   }, [products]);
 
