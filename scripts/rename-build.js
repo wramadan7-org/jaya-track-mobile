@@ -7,8 +7,8 @@ const pkg = JSON.parse(fs.readFileSync("app.json", "utf-8")).expo;
 const appName = pkg.name.replace(/\s+/g, ""); // hilangkan spasi
 const version = pkg.version;
 const date = new Date().toISOString().slice(0, 10);
-const outputDir = "dist";
-const buildDir = "build";
+const outputDir = "dist/android";
+const buildDir = "build/android";
 
 // Pastikan folder dist ada
 if (!fs.existsSync(outputDir)) {
