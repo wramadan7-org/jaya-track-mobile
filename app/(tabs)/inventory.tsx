@@ -74,7 +74,7 @@ export default function BroughtScreen() {
               alignItems: "center",
             }}
           >
-            <ThemedView>
+            <ThemedView style={{ width: "80%" }}>
               <ThemedText type="defaultSemiBold">Nama: {item.name}</ThemedText>
               <ThemedText type="defaultSemiBold">
                 Jumlah: {item.qtyDozens} losin / {Math.floor(item.qtySack)} sak{" "}
