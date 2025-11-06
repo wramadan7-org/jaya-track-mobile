@@ -1,0 +1,3 @@
+{
+  "post-build": "npm run rename:build"
+}

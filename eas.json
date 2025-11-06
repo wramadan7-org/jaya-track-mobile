@@ -3,9 +3,6 @@
     "version": ">= 16.24.1",
     "appVersionSource": "remote"
   },
-  "hooks": {
-    "post-build": "npm run rename:build"
-  },
   "build": {
     "development": {
       "developmentClient": true,
