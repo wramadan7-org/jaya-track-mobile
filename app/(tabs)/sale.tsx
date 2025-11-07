@@ -15,10 +15,6 @@ export default function SaleScreenScreen() {
     { light: "#fff", dark: "#1c1c1e" },
     "background"
   );
-  const totalAmountText = useThemeColor(
-    { light: "#007AFF", dark: "#0A84FF" },
-    "text"
-  );
   const subText = useThemeColor({ light: "#666", dark: "#aaa" }, "text");
   const itemRowBackground = useThemeColor(
     { light: "#f8f8f8", dark: "#2c2c2e" },
@@ -60,78 +56,88 @@ export default function SaleScreenScreen() {
       }
       contentContainerStyle={{ paddingBottom: 130 }}
       renderItem={({ item }) => (
-        <ThemedView
-          style={[
-            styles.saleCard,
-            { borderColor: "#ccc", backgroundColor: cardBackground },
-          ]}
+        <Link
+          href={{ pathname: "/detail-sale-modal", params: { id: item.id } }}
+          asChild
         >
-          {/* Header toko + total */}
-          <ThemedView style={styles.saleHeader}>
-            <ThemedText type="defaultSemiBold" style={styles.saleStore}>
-              {item.store}
-            </ThemedText>
-            <ThemedText
-              type="defaultSemiBold"
-              style={[
-                styles.saleTotal,
-                {
-                  color: totalAmountText,
-                },
-              ]}
+          <Pressable>
+            <ThemedView
+              style={[styles.saleCard, { backgroundColor: cardBackground }]}
             >
-              Rp {item.totalAmount.toLocaleString("id-ID")}
-            </ThemedText>
-          </ThemedView>
-
-          {/* Area */}
-          <ThemedText
-            type="default"
-            style={[styles.saleArea, { color: subText }]}
-          >
-            Area: <ThemedText type="defaultSemiBold">{item.area}</ThemedText>
-          </ThemedText>
-
-          {/* Item terjual */}
-          <ThemedView
-            style={[styles.itemContainer, { borderTopColor: "#ccc" }]}
-          >
-            <ThemedText
-              type="defaultSemiBold"
-              style={[styles.itemHeader, { color: subText }]}
-            >
-              Item Terjual
-            </ThemedText>
-
-            {item.items.map((product, index) => (
-              <ThemedView
-                key={`product-${index}`}
-                style={[styles.itemRow, { backgroundColor: itemRowBackground }]}
-              >
-                <ThemedView
-                  style={{
-                    flex: 1,
-                    borderRadius: 3,
-                    paddingHorizontal: 5,
-                    marginHorizontal: -3,
-                  }}
+              {/* Header toko + total */}
+              <ThemedView style={styles.saleHeader}>
+                <ThemedText type="defaultSemiBold" style={styles.saleStore}>
+                  {item.store}
+                </ThemedText>
+                <ThemedText
+                  type="defaultSemiBold"
+                  style={[
+                    styles.saleTotal,
+                    {
+                      color: "#16A34A",
+                    },
+                  ]}
                 >
-                  <ThemedText type="defaultSemiBold">{product.name}</ThemedText>
-                  <ThemedText
-                    type="default"
-                    style={[styles.itemDetail, { color: subText }]}
-                  >
-                    {product.qtySold}{" "}
-                    {product.unitType === "dozens" ? "losin" : "sak"}
-                  </ThemedText>
-                </ThemedView>
-                <ThemedText type="defaultSemiBold" style={styles.itemPrice}>
-                  Rp {product.subtotal.toLocaleString("id-ID")}
+                  Rp {item.totalAmount.toLocaleString("id-ID")}
                 </ThemedText>
               </ThemedView>
-            ))}
-          </ThemedView>
-        </ThemedView>
+
+              {/* Area */}
+              <ThemedText
+                type="default"
+                style={[styles.saleArea, { color: subText }]}
+              >
+                Area:{" "}
+                <ThemedText type="defaultSemiBold">{item.area}</ThemedText>
+              </ThemedText>
+
+              {/* Item terjual */}
+              <ThemedView
+                style={[styles.itemContainer, { borderTopColor: "#ccc" }]}
+              >
+                <ThemedText
+                  type="defaultSemiBold"
+                  style={[styles.itemHeader, { color: subText }]}
+                >
+                  Item Terjual
+                </ThemedText>
+
+                {item.items.map((product, index) => (
+                  <ThemedView
+                    key={`product-${index}`}
+                    style={[
+                      styles.itemRow,
+                      { backgroundColor: itemRowBackground },
+                    ]}
+                  >
+                    <ThemedView
+                      style={{
+                        flex: 1,
+                        borderRadius: 3,
+                        paddingHorizontal: 5,
+                        marginHorizontal: -3,
+                      }}
+                    >
+                      <ThemedText type="defaultSemiBold">
+                        {product.name}
+                      </ThemedText>
+                      <ThemedText
+                        type="default"
+                        style={[styles.itemDetail, { color: subText }]}
+                      >
+                        {product.qtySold}{" "}
+                        {product.unitType === "dozens" ? "losin" : "sak"}
+                      </ThemedText>
+                    </ThemedView>
+                    <ThemedText type="defaultSemiBold" style={styles.itemPrice}>
+                      Rp {product.subtotal.toLocaleString("id-ID")}
+                    </ThemedText>
+                  </ThemedView>
+                ))}
+              </ThemedView>
+            </ThemedView>
+          </Pressable>
+        </Link>
       )}
       ListEmptyComponent={
         <EmptyState
@@ -146,7 +152,7 @@ export default function SaleScreenScreen() {
             style={{
               textAlign: "center",
               fontSize: 15,
-              color: totalAmountText,
+              color: "#16A34A",
             }}
           >
             Total Penjualan: Rp{" "}
@@ -216,6 +222,7 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     gap: 16,
+    borderColor: "#ccc",
   },
   titleContainer: {
     flexDirection: "row",
