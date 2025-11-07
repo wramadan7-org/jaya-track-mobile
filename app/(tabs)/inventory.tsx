@@ -82,6 +82,9 @@ export default function BroughtScreen() {
                   ? `(+ ${item.qtyDozens % item.fillPerSack} losin)`
                   : ""}
               </ThemedText>
+              <ThemedText type="defaultSemiBold">
+                Harga Dasar: {item?.basePrice?.toLocaleString("id-ID") || "-"}
+              </ThemedText>
             </ThemedView>
             <ThemedText
               type="defaultSemiBold"
@@ -118,15 +121,10 @@ export default function BroughtScreen() {
             }}
           >
             <ThemedView>
-              <ThemedText type="defaultSemiBold">Harga Dasar</ThemedText>
-              <ThemedView style={{ gap: 4 }}>
-                <ThemedText type="default">
-                  Losin: Rp {item.basePricePerDozens.toLocaleString("id-ID")}
-                </ThemedText>
-                <ThemedText type="default">
-                  Sak: Rp {item.basePricePerSack.toLocaleString("id-ID")}
-                </ThemedText>
-              </ThemedView>
+              <ThemedText type="defaultSemiBold">Harga Target Ecer</ThemedText>
+              <ThemedText type="default">
+                Rp {item.targetPricePerDozens.toLocaleString("id-ID") || "-"}
+              </ThemedText>
             </ThemedView>
             <ThemedView
               style={{
@@ -137,15 +135,10 @@ export default function BroughtScreen() {
               }}
             />
             <ThemedView>
-              <ThemedText type="defaultSemiBold">Harga Target</ThemedText>
-              <ThemedView style={{ gap: 4 }}>
-                <ThemedText type="default">
-                  Losin: Rp {item.targetPricePerDozens.toLocaleString("id-ID")}
-                </ThemedText>
-                <ThemedText type="default">
-                  Sak: Rp {item.targetPricePerSack.toLocaleString("id-ID")}
-                </ThemedText>
-              </ThemedView>
+              <ThemedText type="defaultSemiBold">Harga Target Sak</ThemedText>
+              <ThemedText type="default">
+                Rp {item.targetPricePerSack.toLocaleString("id-ID")}
+              </ThemedText>
             </ThemedView>
           </ThemedView>
           <ThemedView style={styles.iconContainer}>

@@ -53,8 +53,7 @@ export const SaleFormComponent = ({
       id: "", // nanti diisi saat pilih produk
       name: "",
       fillPerSack: 0,
-      basePricePerDozens: 0,
-      basePricePerSack: 0,
+      basePrice: 0,
       qtyDozens: 0,
       qtySack: 0,
       unitType: "dozens",
@@ -96,8 +95,7 @@ export const SaleFormComponent = ({
       key === "amountSold" ||
       key === "subtotal" ||
       key === "fillPerSack" ||
-      key === "basePricePerDozens" ||
-      key === "basePricePerSack" ||
+      key === "basePrice" ||
       key === "qtyDozens" ||
       key === "qtySack"
     ) {

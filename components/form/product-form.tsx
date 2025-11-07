@@ -25,8 +25,7 @@ export const ProductFormComponent = ({
     name: "",
     qtyDozens: 0,
     qtySack: 0,
-    basePricePerDozens: 0,
-    basePricePerSack: 0,
+    basePrice: 0,
     targetPricePerDozens: 0,
     targetPricePerSack: 0,
     fillPerSack: 0,
@@ -38,8 +37,7 @@ export const ProductFormComponent = ({
         name: initialData.name,
         qtyDozens: initialData.qtyDozens,
         qtySack: initialData.qtySack,
-        basePricePerDozens: initialData.basePricePerDozens,
-        basePricePerSack: initialData.basePricePerSack,
+        basePrice: initialData.basePrice,
         targetPricePerDozens: initialData.targetPricePerDozens,
         targetPricePerSack: initialData.targetPricePerSack,
         fillPerSack: initialData.fillPerSack,
@@ -79,14 +77,7 @@ export const ProductFormComponent = ({
   };
 
   const handleSubmit = () => {
-    const {
-      name,
-      qtyDozens,
-      qtySack,
-      basePricePerDozens,
-      basePricePerSack,
-      fillPerSack,
-    } = formProduct;
+    const { name, qtyDozens, qtySack, basePrice, fillPerSack } = formProduct;
 
     try {
       if (!name || !fillPerSack) {
@@ -102,7 +93,7 @@ export const ProductFormComponent = ({
         return;
       }
 
-      if (!basePricePerDozens || !basePricePerSack) {
+      if (!basePrice || !basePrice) {
         Alert.alert("Form tidak lengkap", "Harga barang belum diisi");
         return;
       }
@@ -119,8 +110,7 @@ export const ProductFormComponent = ({
           name: "",
           qtyDozens: 0,
           qtySack: 0,
-          basePricePerDozens: 0,
-          basePricePerSack: 0,
+          basePrice: 0,
           targetPricePerDozens: 0,
           targetPricePerSack: 0,
           fillPerSack: 0,
@@ -211,48 +201,21 @@ export const ProductFormComponent = ({
           )}
         </View>
       </View>
-      <View style={styles.inputGroup}>
+      <View style={[styles.inputContainer]}>
         <ThemedText type="defaultSemiBold">Harga Dasar</ThemedText>
-        <View style={styles.inputWrapper}>
-          <View style={[styles.inputContainer]}>
-            <ThemedText type="defaultSemiBold">Losin</ThemedText>
-            <ThemedTextInput
-              style={styles.input}
-              placeholder="15000"
-              value={
-                formProduct.basePricePerDozens
-                  ? formProduct.basePricePerDozens.toString()
-                  : ""
-              }
-              onChangeText={(text) =>
-                handleChange("basePricePerDozens", Number(text))
-              }
-              keyboardType="numeric"
-            />
-          </View>
-          <View style={[styles.inputContainer]}>
-            <ThemedText type="defaultSemiBold">Sak</ThemedText>
-            <ThemedTextInput
-              style={styles.input}
-              placeholder="83000"
-              value={
-                formProduct.basePricePerSack
-                  ? formProduct.basePricePerSack.toString()
-                  : ""
-              }
-              onChangeText={(text) =>
-                handleChange("basePricePerSack", Number(text))
-              }
-              keyboardType="numeric"
-            />
-          </View>
-        </View>
+        <ThemedTextInput
+          style={styles.input}
+          placeholder="15000"
+          value={formProduct.basePrice ? formProduct.basePrice.toString() : ""}
+          onChangeText={(text) => handleChange("basePrice", Number(text))}
+          keyboardType="numeric"
+        />
       </View>
       <View style={styles.inputGroup}>
         <ThemedText type="defaultSemiBold">Harga Target</ThemedText>
         <View style={styles.inputWrapper}>
           <View style={[styles.inputContainer]}>
-            <ThemedText type="defaultSemiBold">Losin</ThemedText>
+            <ThemedText type="defaultSemiBold">Ecer</ThemedText>
             <ThemedTextInput
               style={styles.input}
               placeholder="15000"
