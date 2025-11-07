@@ -12,7 +12,7 @@ export const UnitRadioButton = ({ selected, onChange }: Props) => {
   return (
     <View style={styles.container}>
       {[
-        { label: "Losin", value: "dozens" },
+        { label: "Ecer", value: "dozens" },
         { label: "Sak", value: "sack" },
       ].map((option) => (
         <TouchableOpacity
@@ -26,7 +26,7 @@ export const UnitRadioButton = ({ selected, onChange }: Props) => {
           <ThemedText
             type="defaultSemiBold"
             style={{
-              color: selected === option.value ? "#000" : "#666",
+              color: selected === option.value ? "#414040ff" : "#666",
             }}
           >
             {option.label}
