@@ -8,6 +8,7 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
 } from "react-native";
+import { moderateScale } from "react-native-size-matters";
 import { ProductFormComponent } from "../components/form/product-form";
 import { ThemedText } from "../components/themed-text";
 import { ThemedView } from "../components/themed-view";
@@ -29,7 +30,7 @@ export default function FormProductModalScreen() {
             <ThemedText
               type="title"
               style={{
-                padding: 10,
+                padding: moderateScale(10),
               }}
             >
               {id ? "Edit Barang" : "Tambah Barang"}

@@ -23,15 +23,17 @@ export default function SaleScreenScreen() {
   const { sales, resetSales } = useSalesStore();
 
   const sortSalesByUpdatedAt = useMemo(() => {
-    return [...sales].sort(
-      (a, b) => b?.updatedAt?.getTime() - a?.updatedAt?.getTime()
-    );
+    return sales?.length
+      ? [...sales].sort(
+          (a, b) => b?.updatedAt?.getTime() - a?.updatedAt?.getTime()
+        )
+      : [];
   }, [sales]);
 
   return (
     <FlatListScrollView
       data={sortSalesByUpdatedAt}
-      keyExtractor={(item) => item.id}
+      keyExtractor={(item) => item?.id}
       stickyHeader
       headerComponent={
         <ThemedView style={styles.headerContainer}>
@@ -57,7 +59,7 @@ export default function SaleScreenScreen() {
       contentContainerStyle={{ paddingBottom: 130 }}
       renderItem={({ item }) => (
         <Link
-          href={{ pathname: "/detail-sale-modal", params: { id: item.id } }}
+          href={{ pathname: "/detail-sale-modal", params: { id: item?.id } }}
           asChild
         >
           <Pressable>
@@ -67,7 +69,7 @@ export default function SaleScreenScreen() {
               {/* Header toko + total */}
               <ThemedView style={styles.saleHeader}>
                 <ThemedText type="defaultSemiBold" style={styles.saleStore}>
-                  {item.store}
+                  {item?.store}
                 </ThemedText>
                 <ThemedText
                   type="defaultSemiBold"
@@ -78,7 +80,7 @@ export default function SaleScreenScreen() {
                     },
                   ]}
                 >
-                  Rp {item.totalAmount.toLocaleString("id-ID")}
+                  Rp {item?.totalAmount?.toLocaleString("id-ID")}
                 </ThemedText>
               </ThemedView>
 
@@ -88,7 +90,7 @@ export default function SaleScreenScreen() {
                 style={[styles.saleArea, { color: subText }]}
               >
                 Area:{" "}
-                <ThemedText type="defaultSemiBold">{item.area}</ThemedText>
+                <ThemedText type="defaultSemiBold">{item?.area}</ThemedText>
               </ThemedText>
 
               {/* Item terjual */}
@@ -102,7 +104,7 @@ export default function SaleScreenScreen() {
                   Item Terjual
                 </ThemedText>
 
-                {item.items.map((product, index) => (
+                {item?.items.map((product, index) => (
                   <ThemedView
                     key={`product-${index}`}
                     style={[
@@ -119,18 +121,18 @@ export default function SaleScreenScreen() {
                       }}
                     >
                       <ThemedText type="defaultSemiBold">
-                        {product.name}
+                        {product?.name}
                       </ThemedText>
                       <ThemedText
                         type="default"
                         style={[styles.itemDetail, { color: subText }]}
                       >
-                        {product.qtySold}{" "}
-                        {product.unitType === "dozens" ? "losin" : "sak"}
+                        {product?.qtySold}{" "}
+                        {product?.unitType === "dozens" ? "losin" : "sak"}
                       </ThemedText>
                     </ThemedView>
                     <ThemedText type="defaultSemiBold" style={styles.itemPrice}>
-                      Rp {product.subtotal.toLocaleString("id-ID")}
+                      Rp {product?.subtotal?.toLocaleString("id-ID")}
                     </ThemedText>
                   </ThemedView>
                 ))}
@@ -158,7 +160,7 @@ export default function SaleScreenScreen() {
             Total Penjualan: Rp{" "}
             {sortSalesByUpdatedAt
               .reduce((sum, sale) => sum + (sale.totalAmount || 0), 0)
-              .toLocaleString("id-ID")}
+              ?.toLocaleString("id-ID")}
           </ThemedText>
           <Pressable
             disabled={!!!sortSalesByUpdatedAt?.length}

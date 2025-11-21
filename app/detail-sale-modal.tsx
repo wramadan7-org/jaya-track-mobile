@@ -5,6 +5,7 @@ import { useRoute } from "@react-navigation/native";
 import dayjs from "dayjs";
 import React from "react";
 import { FlatList, StyleSheet, View } from "react-native";
+import { moderateScale } from "react-native-size-matters";
 
 export default function SaleDetailModalScreen() {
   const cardBackground = useThemeColor(
@@ -82,7 +83,7 @@ export default function SaleDetailModalScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    padding: moderateScale(16),
   },
   center: {
     flex: 1,
@@ -90,56 +91,56 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   notFound: {
-    fontSize: 16,
+    fontSize: moderateScale(16),
     color: "#555",
   },
   headerCard: {
     borderRadius: 12,
-    padding: 16,
-    marginBottom: 16,
+    padding: moderateScale(16),
+    marginBottom: moderateScale(16),
     borderColor: "#ccc",
     borderWidth: 1,
   },
   title: {
-    fontSize: 18,
+    fontSize: moderateScale(18),
     fontWeight: "700",
-    marginBottom: 8,
+    marginBottom: moderateScale(8),
   },
   info: {
-    fontSize: 14,
-    marginBottom: 2,
+    fontSize: moderateScale(14),
+    marginBottom: moderateScale(2),
   },
   total: {
-    fontSize: 16,
+    fontSize: moderateScale(16),
     fontWeight: "700",
     color: "#16A34A",
-    marginTop: 8,
+    marginTop: moderateScale(8),
   },
   itemCard: {
     backgroundColor: "#fff",
     borderColor: "#ccc",
     borderWidth: 1,
     borderRadius: 12,
-    padding: 12,
-    marginBottom: 10,
+    padding: moderateScale(12),
+    marginBottom: moderateScale(10),
   },
   rowBetween: {
     flexDirection: "row",
     justifyContent: "space-between",
   },
   itemName: {
-    fontSize: 15,
+    fontSize: moderateScale(15),
     fontWeight: "600",
   },
   itemDetail: {
-    fontSize: 13,
+    fontSize: moderateScale(13),
     color: "#666",
-    marginTop: 4,
+    marginTop: moderateScale(4),
   },
   itemPrice: {
-    fontSize: 13,
+    fontSize: moderateScale(13),
     color: "#666",
-    marginTop: 4,
+    marginTop: moderateScale(4),
   },
   subtotal: {
     fontWeight: "700",

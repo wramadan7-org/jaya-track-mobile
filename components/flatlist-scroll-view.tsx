@@ -2,6 +2,7 @@ import { ThemedView } from "@/components/themed-view";
 import { useThemeColor } from "@/hooks/use-theme-color";
 import React, { ReactElement } from "react";
 import { FlatList, FlatListProps, StyleSheet, ViewStyle } from "react-native";
+import { moderateScale } from "react-native-size-matters";
 
 type CustomScrollListProps<T> = FlatListProps<T> & {
   /** Konten header yang akan muncul di atas list */
@@ -64,15 +65,15 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     zIndex: 10,
-    paddingVertical: 34,
+    paddingVertical: moderateScale(34),
   },
   contentContainer: {
-    paddingHorizontal: 32,
-    paddingVertical: 36,
+    paddingHorizontal: moderateScale(20),
+    paddingVertical: moderateScale(36),
     gap: 16,
   },
   footerContainer: {
-    paddingVertical: 24,
+    paddingVertical: moderateScale(24),
     borderWidth: 2,
     borderColor: "red",
   },
@@ -81,8 +82,8 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    paddingVertical: 16,
-    paddingHorizontal: 32,
+    paddingVertical: moderateScale(16),
+    paddingHorizontal: moderateScale(32),
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: "#ccc",
     shadowColor: "#000",

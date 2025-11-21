@@ -9,6 +9,7 @@ import { useProductStore } from "@/stores/product-store";
 import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import { useMemo, useState } from "react";
+import { moderateScale } from "react-native-size-matters";
 
 export default function BroughtScreen() {
   const { products, deleteProduct, resetProducts } = useProductStore();
@@ -20,23 +21,25 @@ export default function BroughtScreen() {
   };
 
   const sortProductsByUpdatedAt = useMemo(() => {
-    return [...products].sort((a, b) => {
-      const aHasStock = a?.qtySack > 0 || a?.qtyDozens > 0;
-      const bHasStock = b?.qtySack > 0 || b?.qtyDozens > 0;
+    return products?.length
+      ? [...products].sort((a, b) => {
+          const aHasStock = a?.qtySack > 0 || a?.qtyDozens > 0;
+          const bHasStock = b?.qtySack > 0 || b?.qtyDozens > 0;
 
-      // Barang dengan stok masih ada di atas
-      if (aHasStock && !bHasStock) return -1;
-      if (!aHasStock && bHasStock) return 1;
+          // Barang dengan stok masih ada di atas
+          if (aHasStock && !bHasStock) return -1;
+          if (!aHasStock && bHasStock) return 1;
 
-      // Jika stok sama-sama ada atau sama-sama habis, urutkan berdasarkan updatedAt
-      return b?.updatedAt?.getTime() - a?.updatedAt?.getTime();
-    });
+          // Jika stok sama-sama ada atau sama-sama habis, urutkan berdasarkan updatedAt
+          return b?.updatedAt?.getTime() - a?.updatedAt?.getTime();
+        })
+      : [];
   }, [products]);
 
   return (
     <FlatListScrollView
       data={sortProductsByUpdatedAt}
-      keyExtractor={(item) => item.id}
+      keyExtractor={(item) => item?.id}
       stickyHeader
       headerComponent={
         <ThemedView style={styles.headerContainer}>
@@ -75,11 +78,14 @@ export default function BroughtScreen() {
             }}
           >
             <ThemedView style={{ width: "80%" }}>
-              <ThemedText type="defaultSemiBold">Nama: {item.name}</ThemedText>
               <ThemedText type="defaultSemiBold">
-                Jumlah: {item.qtyDozens} losin / {Math.floor(item.qtySack)} sak{" "}
-                {item.qtySack > 0 && item.qtyDozens % item.fillPerSack !== 0
-                  ? `(+ ${item.qtyDozens % item.fillPerSack} losin)`
+                Nama: {item?.name || "-"}
+              </ThemedText>
+              <ThemedText type="defaultSemiBold">
+                Jumlah: {item?.qtyDozens || 0} losin /{" "}
+                {Math.floor(item?.qtySack || 0)} sak{" "}
+                {item?.qtySack > 0 && item?.qtyDozens % item?.fillPerSack !== 0
+                  ? `(+ ${item?.qtyDozens % item?.fillPerSack} losin)`
                   : ""}
               </ThemedText>
               <ThemedText type="defaultSemiBold">
@@ -89,21 +95,21 @@ export default function BroughtScreen() {
             <ThemedText
               type="defaultSemiBold"
               style={{
-                fontSize: 12,
+                fontSize: moderateScale(12),
                 backgroundColor:
-                  item.qtyDozens === 0 && item.qtySack === 0
+                  item?.qtyDozens === 0 && item?.qtySack === 0
                     ? "#FF3B3020"
                     : "#34C75920",
-                paddingHorizontal: 6,
-                paddingVertical: 2,
+                paddingHorizontal: moderateScale(6),
+                paddingVertical: moderateScale(2),
                 borderRadius: 4,
                 color:
-                  item.qtyDozens === 0 && item.qtySack === 0
+                  item?.qtyDozens === 0 && item?.qtySack === 0
                     ? "#FF3B30"
                     : "#34C759",
               }}
             >
-              {item.qtyDozens === 0 && item.qtySack === 0
+              {item?.qtyDozens === 0 && item?.qtySack === 0
                 ? "Habis"
                 : "Tersedia"}
             </ThemedText>
@@ -123,7 +129,7 @@ export default function BroughtScreen() {
             <ThemedView>
               <ThemedText type="defaultSemiBold">Harga Target Ecer</ThemedText>
               <ThemedText type="default">
-                Rp {item.targetPricePerDozens.toLocaleString("id-ID") || "-"}
+                Rp {item?.targetPricePerDozens?.toLocaleString("id-ID") || "-"}
               </ThemedText>
             </ThemedView>
             <ThemedView
@@ -137,7 +143,7 @@ export default function BroughtScreen() {
             <ThemedView>
               <ThemedText type="defaultSemiBold">Harga Target Sak</ThemedText>
               <ThemedText type="default">
-                Rp {item.targetPricePerSack.toLocaleString("id-ID")}
+                Rp {item?.targetPricePerSack?.toLocaleString("id-ID")}
               </ThemedText>
             </ThemedView>
           </ThemedView>
@@ -146,7 +152,7 @@ export default function BroughtScreen() {
               disabled={disableAction}
               href={{
                 pathname: "/form-product-modal",
-                params: { id: item.id },
+                params: { id: item?.id },
               }}
               asChild
             >
@@ -166,7 +172,7 @@ export default function BroughtScreen() {
             <Pressable
               disabled={disableAction}
               style={[styles.iconButton, disableAction && styles.iconDisabled]}
-              onPress={() => deleteProduct(item.id)}
+              onPress={() => deleteProduct(item?.id)}
             >
               <Ionicons
                 name="trash-outline"
@@ -223,13 +229,13 @@ const styles = StyleSheet.create({
   },
   button: {
     borderRadius: 8,
-    padding: 10,
+    padding: moderateScale(10),
     flex: 1,
   },
   buttonDisabled: {
     backgroundColor: "#A0A0A0",
     borderRadius: 8,
-    padding: 10,
+    padding: moderateScale(10),
     textAlign: "center",
   },
   buttonAdd: {
@@ -242,8 +248,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#FF3B30",
   },
   productCard: {
-    padding: 10,
-    marginVertical: 5,
+    padding: moderateScale(10),
+    marginVertical: moderateScale(5),
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 8,
@@ -254,7 +260,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   iconButton: {
-    padding: 6,
+    padding: moderateScale(6),
   },
   iconDisabled: {
     opacity: 0.5,

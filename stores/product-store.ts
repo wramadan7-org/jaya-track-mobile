@@ -35,7 +35,7 @@ export const useProductStore = create<ProductStore>()(
           const now = new Date();
           return {
             products: [
-              ...state.products,
+              ...state?.products,
               {
                 ...product,
                 createdAt: now,
@@ -47,14 +47,14 @@ export const useProductStore = create<ProductStore>()(
       updateProduct: (id, updatedProduct) =>
         set((state) => ({
           products: state.products.map((product) =>
-            product.id === id
+            product?.id === id
               ? { ...product, ...updatedProduct, updatedAt: new Date() }
               : product
           ),
         })),
       deleteProduct: (id: string) =>
         set((state) => ({
-          products: state.products.filter((product) => product.id !== id),
+          products: state?.products?.filter((product) => product?.id !== id),
         })),
       resetProducts: () => set({ products: [] }),
     }),
@@ -64,10 +64,10 @@ export const useProductStore = create<ProductStore>()(
       // 🔹 konversi string menjadi Date saat load dari storage
       onRehydrateStorage: () => (state) => {
         if (state?.products) {
-          state.products = state.products.map((product) => ({
+          state.products = state?.products?.map((product) => ({
             ...product,
-            createdAt: new Date(product.createdAt),
-            updatedAt: new Date(product.updatedAt),
+            createdAt: new Date(product?.createdAt),
+            updatedAt: new Date(product?.updatedAt),
           }));
         }
       },

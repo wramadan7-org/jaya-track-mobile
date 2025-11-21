@@ -47,7 +47,7 @@ export const useSalesStore = create<SaleStore>()(
           sale.items.forEach((item) => {
             let subtotal = 0;
             const currentProduct = productStore.products.find(
-              (p) => p.id === item.id
+              (p) => p?.id === item?.id
             );
 
             if (!currentProduct) return;
@@ -55,15 +55,15 @@ export const useSalesStore = create<SaleStore>()(
             let newQtyDozens = currentProduct.qtyDozens;
             let newQtySack = currentProduct.qtySack;
 
-            if (item.unitType === "dozens") {
+            if (item?.unitType === "dozens") {
               // Kalkulasi harga
-              subtotal = Number(item.qtySold) * Number(item.amountSold);
+              subtotal = Number(item?.qtySold) * Number(item?.amountSold);
               computedTotal += subtotal;
 
               // Kurangi jumlah losin
               newQtyDozens = Math.max(
                 0,
-                currentProduct.qtyDozens - item.qtySold
+                currentProduct.qtyDozens - item?.qtySold
               );
 
               // Update juga jumlah sak (otomatis ikut turun)
@@ -72,16 +72,16 @@ export const useSalesStore = create<SaleStore>()(
                   Number(newQtyDozens) / currentProduct.fillPerSack;
                 newQtySack = Math.floor(result * 10) / 10;
               }
-            } else if (item.unitType === "sack") {
+            } else if (item?.unitType === "sack") {
               // Kalkulasi harga
               subtotal =
-                Number(item.qtySold) *
+                Number(item?.qtySold) *
                 Number(currentProduct.fillPerSack) *
-                Number(item.amountSold);
+                Number(item?.amountSold);
               computedTotal += subtotal;
 
               // Kurangi jumlah sak
-              newQtySack = Math.max(0, currentProduct.qtySack - item.qtySold);
+              newQtySack = Math.max(0, currentProduct.qtySack - item?.qtySold);
 
               // Update jumlah losin berdasarkan isi per sak
               if (currentProduct.fillPerSack > 0) {
@@ -93,7 +93,7 @@ export const useSalesStore = create<SaleStore>()(
             item.subtotal = subtotal;
 
             // Update data produk
-            productStore.updateProduct(item.id, {
+            productStore.updateProduct(item?.id, {
               qtyDozens: newQtyDozens,
               qtySack: newQtySack,
             });
@@ -118,28 +118,28 @@ export const useSalesStore = create<SaleStore>()(
           // 🔹 1️⃣ Rollback stok dari sale lama
           existingSale.items.forEach((oldItem) => {
             const currentProduct = productStore.products.find(
-              (p) => p.id === oldItem.id
+              (p) => p.id === oldItem?.id
             );
             if (!currentProduct) return;
 
             let rollbackDozens = currentProduct.qtyDozens;
             let rollbackSack = currentProduct.qtySack;
 
-            if (oldItem.unitType === "dozens") {
-              rollbackDozens = currentProduct.qtyDozens + oldItem.qtySold;
+            if (oldItem?.unitType === "dozens") {
+              rollbackDozens = currentProduct.qtyDozens + oldItem?.qtySold;
               if (currentProduct.fillPerSack > 0) {
                 const result =
                   Number(rollbackDozens) / currentProduct.fillPerSack;
                 rollbackSack = Math.floor(result * 10) / 10;
               }
-            } else if (oldItem.unitType === "sack") {
-              rollbackSack = currentProduct.qtySack + oldItem.qtySold;
+            } else if (oldItem?.unitType === "sack") {
+              rollbackSack = currentProduct.qtySack + oldItem?.qtySold;
               if (currentProduct.fillPerSack > 0) {
                 rollbackDozens = rollbackSack * currentProduct.fillPerSack;
               }
             }
 
-            productStore.updateProduct(oldItem.id, {
+            productStore.updateProduct(oldItem?.id, {
               qtyDozens: rollbackDozens,
               qtySack: rollbackSack,
             });
@@ -150,7 +150,7 @@ export const useSalesStore = create<SaleStore>()(
           updatedSaleData.items.forEach((item) => {
             let subtotal = 0;
             const currentProduct = productStore.products.find(
-              (p) => p.id === item.id
+              (p) => p.id === item?.id
             );
 
             if (!currentProduct) return;
@@ -158,25 +158,25 @@ export const useSalesStore = create<SaleStore>()(
             let newQtyDozens = currentProduct.qtyDozens;
             let newQtySack = currentProduct.qtySack;
 
-            if (item.unitType === "dozens") {
-              subtotal = item.qtySold * item.amountSold;
+            if (item?.unitType === "dozens") {
+              subtotal = item?.qtySold * item?.amountSold;
               computedTotal += subtotal;
 
               newQtyDozens = Math.max(
                 0,
-                currentProduct.qtyDozens - item.qtySold
+                currentProduct.qtyDozens - item?.qtySold
               );
               if (currentProduct.fillPerSack > 0) {
                 const result =
                   Number(newQtyDozens) / currentProduct.fillPerSack;
                 newQtySack = Math.floor(result * 10) / 10;
               }
-            } else if (item.unitType === "sack") {
+            } else if (item?.unitType === "sack") {
               subtotal =
-                item.qtySold * currentProduct.fillPerSack * item.amountSold;
+                item?.qtySold * currentProduct.fillPerSack * item?.amountSold;
               computedTotal += subtotal;
 
-              newQtySack = Math.max(0, currentProduct.qtySack - item.qtySold);
+              newQtySack = Math.max(0, currentProduct.qtySack - item?.qtySold);
               if (currentProduct.fillPerSack > 0) {
                 newQtyDozens = newQtySack * currentProduct.fillPerSack;
               }
@@ -185,7 +185,7 @@ export const useSalesStore = create<SaleStore>()(
             // Update subtotal tiap item
             item.subtotal = subtotal;
 
-            productStore.updateProduct(item.id, {
+            productStore.updateProduct(item?.id, {
               qtyDozens: newQtyDozens,
               qtySack: newQtySack,
             });
@@ -213,16 +213,18 @@ export const useSalesStore = create<SaleStore>()(
 
           // Kembalikan stok
           saleToDelete.items.forEach((item) => {
-            const product = productStore.products.find((p) => p.id === item.id);
+            const product = productStore.products.find(
+              (p) => p.id === item?.id
+            );
             if (!product) return;
 
-            if (item.unitType === "dozens") {
-              productStore.updateProduct(item.id, {
-                qtyDozens: product.qtyDozens + item.qtySold,
+            if (item?.unitType === "dozens") {
+              productStore.updateProduct(item?.id, {
+                qtyDozens: product.qtyDozens + item?.qtySold,
               });
             } else {
-              productStore.updateProduct(item.id, {
-                qtySack: product.qtySack + item.qtySold,
+              productStore.updateProduct(item?.id, {
+                qtySack: product.qtySack + item?.qtySold,
               });
             }
           });
