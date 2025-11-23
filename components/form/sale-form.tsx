@@ -3,6 +3,7 @@ import { useSalesStore, type Sale } from "@/stores/sales-store";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { Alert, Pressable, StyleSheet, View } from "react-native";
+import { moderateScale } from "react-native-size-matters";
 import { ThemedPicker } from "../themed-picker";
 import { ThemedText } from "../themed-text";
 import { ThemedTextInput } from "../themed-text-input";
@@ -358,6 +359,8 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     gap: 15,
+    paddingHorizontal: moderateScale(20),
+    paddingVertical: moderateScale(36),
   },
   inputWrapper: {
     flexDirection: "row",
@@ -424,6 +427,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 5,
     borderRadius: 8,
-    backgroundColor: "rgba(78, 29, 29, 0.93)",
+    backgroundColor: "#eebabaed",
   },
 });

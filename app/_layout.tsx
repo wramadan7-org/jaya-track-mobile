@@ -9,6 +9,7 @@ import "react-native-reanimated";
 
 import ErrorBoundary from "@/components/error-boundary";
 import { useColorScheme } from "@/hooks/use-color-scheme";
+import { KeyboardProvider } from "react-native-keyboard-controller";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export const unstable_settings = {
@@ -20,47 +21,51 @@ export default function RootLayout() {
 
   return (
     <SafeAreaProvider>
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <ErrorBoundary>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen
-              name="modal"
-              options={{
-                presentation: "modal",
-                title: "",
-                statusBarHidden: true,
-                headerTintColor: colorScheme === "dark" ? "white" : "black",
-              }}
-            />
-            <Stack.Screen
-              name="form-product-modal"
-              options={{
-                presentation: "modal",
-                title: "",
-                statusBarHidden: true,
-              }}
-            />
-            <Stack.Screen
-              name="form-sale-modal"
-              options={{
-                presentation: "modal",
-                title: "",
-                statusBarHidden: true,
-              }}
-            />
-            <Stack.Screen
-              name="detail-sale-modal"
-              options={{
-                presentation: "modal",
-                title: "",
-                statusBarHidden: true,
-              }}
-            />
-          </Stack>
-        </ErrorBoundary>
-        <StatusBar style="auto" />
-      </ThemeProvider>
+      <KeyboardProvider>
+        <ThemeProvider
+          value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+        >
+          <ErrorBoundary>
+            <Stack>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen
+                name="modal"
+                options={{
+                  presentation: "modal",
+                  title: "",
+                  statusBarHidden: true,
+                  headerTintColor: colorScheme === "dark" ? "white" : "black",
+                }}
+              />
+              <Stack.Screen
+                name="form-product-modal"
+                options={{
+                  presentation: "modal",
+                  title: "",
+                  statusBarHidden: true,
+                }}
+              />
+              <Stack.Screen
+                name="form-sale-modal"
+                options={{
+                  presentation: "modal",
+                  title: "",
+                  statusBarHidden: true,
+                }}
+              />
+              <Stack.Screen
+                name="detail-sale-modal"
+                options={{
+                  presentation: "modal",
+                  title: "",
+                  statusBarHidden: true,
+                }}
+              />
+            </Stack>
+          </ErrorBoundary>
+          <StatusBar style="auto" />
+        </ThemeProvider>
+      </KeyboardProvider>
     </SafeAreaProvider>
   );
 }

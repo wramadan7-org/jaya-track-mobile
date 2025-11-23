@@ -2,6 +2,7 @@ import type { Product } from "@/stores/product-store";
 import { useProductStore } from "@/stores/product-store";
 import { useEffect, useState } from "react";
 import { Alert, Pressable, StyleSheet, View } from "react-native";
+import { moderateScale } from "react-native-size-matters";
 import { ThemedText } from "../themed-text";
 import { ThemedTextInput } from "../themed-text-input";
 import { ThemedView } from "../themed-view";
@@ -262,6 +263,8 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     gap: 15,
+    paddingHorizontal: moderateScale(20),
+    paddingVertical: moderateScale(36),
   },
   inputWrapper: {
     flexDirection: "row",
