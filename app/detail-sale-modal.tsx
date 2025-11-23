@@ -1,3 +1,4 @@
+import { FlatListScrollView } from "@/components/flatlist-scroll-view";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import CardContainer from "@/components/ui/card-container";
@@ -6,7 +7,7 @@ import { useSalesStore } from "@/stores/sales-store";
 import { useRoute } from "@react-navigation/native";
 import dayjs from "dayjs";
 import React from "react";
-import { FlatList, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { moderateScale } from "react-native-size-matters";
 
 export default function SaleDetailModalScreen() {
@@ -54,11 +55,12 @@ export default function SaleDetailModalScreen() {
       </ThemedView>
 
       {/* 🔹 Daftar Item */}
-      <FlatList
+      <FlatListScrollView
         data={sale.items}
         keyExtractor={(item) => item.id}
+        containerStyle={{ paddingHorizontal: 0, gap: 10 }}
         renderItem={({ item }) => (
-          <CardContainer style={styles.itemCard}>
+          <CardContainer>
             <ThemedView style={styles.rowBetween}>
               <ThemedText type="default" style={styles.itemName}>
                 {item.name}
@@ -78,7 +80,6 @@ export default function SaleDetailModalScreen() {
             </ThemedView>
           </CardContainer>
         )}
-        ListFooterComponent={<ThemedView style={{ height: 80 }} />}
       />
     </ThemedView>
   );
@@ -119,9 +120,6 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: "#16A34A",
     marginTop: moderateScale(8),
-  },
-  itemCard: {
-    marginBottom: moderateScale(10),
   },
   rowBetween: {
     flexDirection: "row",
