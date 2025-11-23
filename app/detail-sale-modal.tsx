@@ -1,10 +1,12 @@
 import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/themed-view";
+import CardContainer from "@/components/ui/card-container";
 import { useThemeColor } from "@/hooks/use-theme-color";
 import { useSalesStore } from "@/stores/sales-store";
 import { useRoute } from "@react-navigation/native";
 import dayjs from "dayjs";
 import React from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet } from "react-native";
 import { moderateScale } from "react-native-size-matters";
 
 export default function SaleDetailModalScreen() {
@@ -20,18 +22,20 @@ export default function SaleDetailModalScreen() {
 
   if (!sale) {
     return (
-      <View style={styles.center}>
+      <ThemedView style={styles.center}>
         <ThemedText type="default" style={styles.notFound}>
           Data penjualan tidak ditemukan
         </ThemedText>
-      </View>
+      </ThemedView>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
       {/* 🔹 Info Penjualan */}
-      <View style={[styles.headerCard, { backgroundColor: cardBackground }]}>
+      <ThemedView
+        style={[styles.headerCard, { backgroundColor: cardBackground }]}
+      >
         <ThemedText type="default" style={styles.title}>
           Detail Penjualan
         </ThemedText>
@@ -47,36 +51,36 @@ export default function SaleDetailModalScreen() {
         <ThemedText type="default" style={styles.total}>
           Total: Rp {sale.totalAmount.toLocaleString("id-ID")}
         </ThemedText>
-      </View>
+      </ThemedView>
 
       {/* 🔹 Daftar Item */}
       <FlatList
         data={sale.items}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <View style={[styles.itemCard, { backgroundColor: cardBackground }]}>
-            <View style={styles.rowBetween}>
+          <CardContainer style={styles.itemCard}>
+            <ThemedView style={styles.rowBetween}>
               <ThemedText type="default" style={styles.itemName}>
                 {item.name}
               </ThemedText>
               <ThemedText type="default" style={styles.subtotal}>
                 Rp {item.subtotal.toLocaleString("id-ID")}
               </ThemedText>
-            </View>
+            </ThemedView>
 
-            <View style={styles.rowBetween}>
+            <ThemedView style={styles.rowBetween}>
               <ThemedText type="default" style={styles.itemDetail}>
                 {item.qtySold} {item.unitType === "dozens" ? "lusin" : "sak"}
               </ThemedText>
               <ThemedText type="default" style={styles.itemPrice}>
                 x Rp {item.amountSold.toLocaleString("id-ID")}
               </ThemedText>
-            </View>
-          </View>
+            </ThemedView>
+          </CardContainer>
         )}
-        ListFooterComponent={<View style={{ height: 80 }} />}
+        ListFooterComponent={<ThemedView style={{ height: 80 }} />}
       />
-    </View>
+    </ThemedView>
   );
 }
 
@@ -117,11 +121,6 @@ const styles = StyleSheet.create({
     marginTop: moderateScale(8),
   },
   itemCard: {
-    backgroundColor: "#fff",
-    borderColor: "#ccc",
-    borderWidth: 1,
-    borderRadius: 12,
-    padding: moderateScale(12),
     marginBottom: moderateScale(10),
   },
   rowBetween: {

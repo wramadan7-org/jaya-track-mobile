@@ -3,6 +3,7 @@ import { Pressable, StyleSheet } from "react-native";
 import { FlatListScrollView } from "@/components/flatlist-scroll-view";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
+import CardContainer from "@/components/ui/card-container";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Fonts } from "@/constants/theme";
 import { useProductStore } from "@/stores/product-store";
@@ -69,12 +70,13 @@ export default function BroughtScreen() {
         </ThemedView>
       }
       renderItem={({ item }) => (
-        <ThemedView style={styles.productCard}>
+        <CardContainer>
           <ThemedView
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
               alignItems: "center",
+              backgroundColor: "transparant",
             }}
           >
             <ThemedView style={{ width: "80%" }}>
@@ -181,7 +183,7 @@ export default function BroughtScreen() {
               />
             </Pressable>
           </ThemedView>
-        </ThemedView>
+        </CardContainer>
       )}
       ListEmptyComponent={
         <EmptyState title="Barang belum ada" message="Harap tambahkan barang" />
@@ -246,13 +248,6 @@ const styles = StyleSheet.create({
   },
   buttonRemove: {
     backgroundColor: "#FF3B30",
-  },
-  productCard: {
-    padding: moderateScale(10),
-    marginVertical: moderateScale(5),
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
   },
   iconContainer: {
     flexDirection: "row",

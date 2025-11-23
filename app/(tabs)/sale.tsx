@@ -3,6 +3,7 @@ import { Pressable, StyleSheet } from "react-native";
 import { FlatListScrollView } from "@/components/flatlist-scroll-view";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
+import CardContainer from "@/components/ui/card-container";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Fonts } from "@/constants/theme";
 import { useThemeColor } from "@/hooks/use-theme-color";
@@ -11,15 +12,7 @@ import { Link } from "expo-router";
 import { useMemo } from "react";
 
 export default function SaleScreenScreen() {
-  const cardBackground = useThemeColor(
-    { light: "#fff", dark: "#1c1c1e" },
-    "background"
-  );
   const subText = useThemeColor({ light: "#666", dark: "#aaa" }, "text");
-  const itemRowBackground = useThemeColor(
-    { light: "#f8f8f8", dark: "#2c2c2e" },
-    "background"
-  );
   const { sales, resetSales } = useSalesStore();
 
   const sortSalesByUpdatedAt = useMemo(() => {
@@ -63,9 +56,7 @@ export default function SaleScreenScreen() {
           asChild
         >
           <Pressable>
-            <ThemedView
-              style={[styles.saleCard, { backgroundColor: cardBackground }]}
-            >
+            <CardContainer>
               {/* Header toko + total */}
               <ThemedView style={styles.saleHeader}>
                 <ThemedText type="defaultSemiBold" style={styles.saleStore}>
@@ -107,10 +98,9 @@ export default function SaleScreenScreen() {
                 {item?.items.map((product, index) => (
                   <ThemedView
                     key={`product-${index}`}
-                    style={[
-                      styles.itemRow,
-                      { backgroundColor: itemRowBackground },
-                    ]}
+                    lightColor="#f8f8f8"
+                    darkColor="#2c2c2e"
+                    style={[styles.itemRow]}
                   >
                     <ThemedView
                       style={{
@@ -137,7 +127,7 @@ export default function SaleScreenScreen() {
                   </ThemedView>
                 ))}
               </ThemedView>
-            </ThemedView>
+            </CardContainer>
           </Pressable>
         </Link>
       )}
@@ -186,8 +176,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginHorizontal: -10,
-    paddingHorizontal: 10,
   },
   saleStore: {
     fontSize: 16,
@@ -249,13 +237,6 @@ const styles = StyleSheet.create({
   },
   buttonRemove: {
     backgroundColor: "#FF3B30",
-  },
-  saleCard: {
-    padding: 10,
-    marginVertical: 5,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
   },
   iconContainer: {
     flexDirection: "row",
