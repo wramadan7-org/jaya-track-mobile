@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet } from "react-native";
+import { Pressable, RefreshControl, StyleSheet } from "react-native";
 
 import { FlatListScrollView } from "@/components/flatlist-scroll-view";
 import { ThemedText } from "@/components/themed-text";
@@ -9,13 +9,21 @@ import { Fonts } from "@/constants/theme";
 import { useProductStore } from "@/stores/product-store";
 import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { moderateScale } from "react-native-size-matters";
 
 export default function BroughtScreen() {
   const { products, deleteProduct, resetProducts } = useProductStore();
 
   const [disableAction, setDisableAction] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
 
   const handleConfirmation = () => {
     setDisableAction(!disableAction);
@@ -41,6 +49,9 @@ export default function BroughtScreen() {
     <FlatListScrollView
       data={sortProductsByUpdatedAt}
       keyExtractor={(item) => item?.id}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
       stickyHeader
       headerComponent={
         <ThemedView style={styles.headerContainer}>

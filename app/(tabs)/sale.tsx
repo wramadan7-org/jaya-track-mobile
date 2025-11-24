@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet } from "react-native";
+import { Pressable, RefreshControl, StyleSheet } from "react-native";
 
 import { FlatListScrollView } from "@/components/flatlist-scroll-view";
 import { ThemedText } from "@/components/themed-text";
@@ -9,11 +9,20 @@ import { Fonts } from "@/constants/theme";
 import { useThemeColor } from "@/hooks/use-theme-color";
 import { useSalesStore } from "@/stores/sales-store";
 import { Link } from "expo-router";
-import { useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 export default function SaleScreenScreen() {
   const subText = useThemeColor({ light: "#666", dark: "#aaa" }, "text");
   const { sales, resetSales } = useSalesStore();
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
 
   const sortSalesByUpdatedAt = useMemo(() => {
     return sales?.length
@@ -27,6 +36,9 @@ export default function SaleScreenScreen() {
     <FlatListScrollView
       data={sortSalesByUpdatedAt}
       keyExtractor={(item) => item?.id}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
       stickyHeader
       headerComponent={
         <ThemedView style={styles.headerContainer}>
