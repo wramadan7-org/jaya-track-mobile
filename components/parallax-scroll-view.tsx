@@ -15,6 +15,7 @@ import Animated, {
 import { ThemedView } from "@/components/themed-view";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useThemeColor } from "@/hooks/use-theme-color";
+import { moderateScale } from "react-native-size-matters";
 
 const HEADER_HEIGHT = 250;
 
@@ -71,7 +72,7 @@ export default function ParallaxScrollView({
       keyboardShouldPersistTaps="handled"
       contentContainerStyle={{
         flexGrow: 1,
-        paddingBottom: 36,
+        paddingVertical: moderateScale(36),
         gap: 16,
       }}
       refreshControl={
@@ -104,8 +105,8 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: 32,
-    paddingVertical: 36,
+    paddingHorizontal: moderateScale(32),
+    paddingVertical: moderateScale(36),
     gap: 16,
     overflow: "hidden",
   },

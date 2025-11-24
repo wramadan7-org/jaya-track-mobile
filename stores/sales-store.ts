@@ -28,7 +28,8 @@ type SaleStore = {
     newSale: Omit<Sale, "id" | "createdAt" | "updatedAt">
   ) => void;
   deleteSale: (id: string) => void;
-  getTotalSalesAmount: () => number;
+  getTodayProfit: () => number;
+  getTodayNetProfit: (operationalCost: number) => number;
   resetSales: () => void;
 };
 
@@ -233,8 +234,40 @@ export const useSalesStore = create<SaleStore>()(
             sales: state.sales.filter((s) => s.id !== id),
           };
         }),
-      getTotalSalesAmount: () =>
-        get().sales.reduce((total, sale) => total + (sale.totalAmount || 0), 0),
+      getTodayProfit: () => {
+        const now = new Date().toDateString();
+        const salesToday = get().sales.filter(
+          (s) => new Date(s.createdAt).toDateString() === now
+        );
+
+        let totalProfit = 0;
+
+        salesToday.forEach((sale) => {
+          sale.items.forEach((item) => {
+            const base = item.basePrice;
+            const fill = item.fillPerSack;
+
+            let modal = 0;
+            let keuntungan = 0;
+
+            if (item.unitType === "dozens") {
+              modal = base; // modal per losin
+              keuntungan = (item.amountSold - modal) * item.qtySold;
+            } else {
+              modal = base * fill; // modal per sak
+              keuntungan = (item.amountSold * fill - modal) * item.qtySold;
+            }
+
+            totalProfit += keuntungan;
+          });
+        });
+
+        return totalProfit;
+      },
+      getTodayNetProfit: (operationalCost = 0) => {
+        const labaKotor = get().getTodayProfit();
+        return labaKotor - operationalCost;
+      },
       resetSales: () => set({ sales: [] }),
     }),
     {
