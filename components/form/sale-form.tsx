@@ -1,14 +1,13 @@
 import { Product, useProductStore } from "@/stores/product-store";
 import { useSalesStore, type Sale } from "@/stores/sales-store";
-import { Ionicons } from "@expo/vector-icons";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Alert, Pressable, StyleSheet, View } from "react-native";
 import { moderateScale } from "react-native-size-matters";
-import { ThemedPicker } from "../themed-picker";
 import { ThemedText } from "../themed-text";
 import { ThemedTextInput } from "../themed-text-input";
 import { ThemedView } from "../themed-view";
-import { UnitRadioButton, UnitType } from "../ui/unit-type-radio-button";
+import { UnitType } from "../ui/unit-type-radio-button";
+import SaleFormItemRow from "./sale-form-item-row";
 
 type SaleFormProps = {
   initialData?: Sale;
@@ -44,14 +43,14 @@ export const SaleFormComponent = ({
     }
   }, [initialData]);
 
-  const handleAddItem = () => {
+  const handleAddItem = useCallback(() => {
     const newItem: Product & {
       qtySold: number;
       amountSold: number;
       unitType: "dozens" | "sack";
       subtotal: number;
     } = {
-      id: "", // nanti diisi saat pilih produk
+      id: "",
       name: "",
       fillPerSack: 0,
       basePrice: 0,
@@ -71,96 +70,111 @@ export const SaleFormComponent = ({
       ...prev,
       items: [...prev.items, newItem],
     }));
-  };
+  }, []);
 
-  const handleParentChange = (key: string, value: string | number) => {
-    setFormSale({ ...formSale, [key]: value });
-  };
+  const handleParentChange = useCallback(
+    (key: string, value: string | number) => {
+      setFormSale({ ...formSale, [key]: value });
+    },
+    [formSale]
+  );
 
-  const handleItemChange = (
-    index: number,
-    key: keyof (Product & {
-      qtySold: number;
-      amountSold: number;
-      subtotal: number;
-      unitType: "dozens" | "sack";
-    }),
-    value: string | number
-  ) => {
-    const items = [...formSale.items];
-    const item = items[index];
+  const handleItemChange = useCallback(
+    (
+      index: number,
+      key: keyof (Product & {
+        qtySold: number;
+        amountSold: number;
+        subtotal: number;
+        unitType: "dozens" | "sack";
+      }),
+      value: string | number
+    ) => {
+      const items = [...formSale.items];
+      const item = items[index];
 
-    // 🔹 ubah tipe data otomatis untuk number
-    if (
-      key === "qtySold" ||
-      key === "amountSold" ||
-      key === "subtotal" ||
-      key === "fillPerSack" ||
-      key === "basePrice" ||
-      key === "qtyDozens" ||
-      key === "qtySack"
-    ) {
-      (item[key] as number) = Number(value);
-    } else {
-      (item[key] as any) = value;
-    }
+      // 🔹 ubah tipe data otomatis untuk number
+      if (
+        key === "qtySold" ||
+        key === "amountSold" ||
+        key === "subtotal" ||
+        key === "fillPerSack" ||
+        key === "basePrice" ||
+        key === "qtyDozens" ||
+        key === "qtySack"
+      ) {
+        (item[key] as number) = Number(value);
+      } else {
+        (item[key] as any) = value;
+      }
 
-    setFormSale((prev) => ({
-      ...prev,
-      items,
-    }));
-  };
+      setFormSale((prev) => ({
+        ...prev,
+        items,
+      }));
+    },
+    [formSale.items]
+  );
 
-  const handleItemPickerChange = (index: number, value: string) => {
-    const items = [...formSale.items];
-    let item = items[index];
+  const handleItemPickerChange = useCallback(
+    (index: number, value: string) => {
+      const items = [...formSale.items];
+      let item = items[index];
 
-    const selected = products.find((p) => p.name === value);
+      const selected = products.find((p) => p.name === value);
 
-    if (!selected) return;
+      if (!selected) return;
 
-    items[index] = {
-      ...selected,
-      subtotal: item.subtotal,
-      qtySold: item.qtySold,
-      amountSold:
-        formSale.items[index].unitType === "sack"
+      items[index] = {
+        ...selected,
+        subtotal: item.subtotal,
+        qtySold: item.qtySold,
+        amountSold:
+          formSale.items[index].unitType === "sack"
+            ? selected.targetPricePerSack
+            : selected.targetPricePerDozens,
+        unitType: item.unitType,
+      };
+
+      setFormSale((prev) => ({ ...prev, items }));
+    },
+    [formSale.items, products]
+  );
+
+  const handleItemRadioChange = useCallback(
+    (index: number, value: UnitType) => {
+      handleItemChange(index, "unitType", value);
+
+      // Jika ganti tipe satuan, update juga harga sesuai tipe
+      const selected = products.find(
+        (p) => p.name === formSale.items[index].name
+      );
+
+      if (!selected) return;
+
+      handleItemChange(
+        index,
+        "amountSold",
+        value === "sack"
           ? selected.targetPricePerSack
-          : selected.targetPricePerDozens,
-      unitType: item.unitType,
-    };
+          : selected.targetPricePerDozens
+      );
+    },
+    [formSale.items, handleItemChange, products]
+  );
 
-    setFormSale((prev) => ({ ...prev, items }));
-  };
-
-  const handleItemRadioChange = (index: number, value: UnitType) => {
-    handleItemChange(index, "unitType", value);
-
-    // Jika ganti tipe satuan, update juga harga sesuai tipe
-    const selected = products.find(
-      (p) => p.name === formSale.items[index].name
-    );
-
-    if (!selected) return;
-
-    handleItemChange(
-      index,
-      "amountSold",
-      value === "sack"
-        ? selected.targetPricePerSack
-        : selected.targetPricePerDozens
-    );
-  };
-
-  const handleRemoveItem = (index: number) => {
-    const items = [...formSale.items];
-    items.splice(index, 1);
-    const total = items.reduce(
-      (sum, item) => sum + item.qtySold * item.amountSold,
-      0
-    );
-    setFormSale({ ...formSale, items, totalAmount: total });
-  };
+  const handleRemoveItem = useCallback(
+    (index: number) => {
+      const items = [...formSale.items];
+      items.splice(index, 1);
+      const total = items.reduce(
+        (sum, item) => sum + item.qtySold * item.amountSold,
+        0
+      );
+      setFormSale({ ...formSale, items, totalAmount: total });
+    },
+    [formSale]
+  );
 
   const handleSubmit = () => {
     try {
@@ -247,96 +261,17 @@ export const SaleFormComponent = ({
           <ThemedText type="defaultSemiBold">Item Penjualan</ThemedText>
         )}
         {formSale.items.map((item, index) => (
-          <View
-            key={`sale-item-${index}`}
-            style={{
-              borderWidth: 1,
-              borderRadius: 8,
-              borderColor: "#ccc",
-              padding: 10,
-              gap: 10,
-            }}
-          >
-            <View style={[styles.inputContainer]}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <ThemedText type="defaultSemiBold">Nama Barang</ThemedText>
-                <ThemedText>#{index + 1}</ThemedText>
-              </View>
-              <ThemedPicker
-                selectedValue={item.name}
-                onValueChange={(value) => handleItemPickerChange(index, value)}
-                items={products
-                  .filter((p) => p.qtyDozens > 0)
-                  .filter((p) => {
-                    const selectedNames = formSale.items
-                      .filter((_, i) => i !== index)
-                      .map((it) => it.name)
-                      .filter(Boolean);
-                    return !selectedNames.includes(p.name);
-                  })
-                  .map((p) => ({
-                    id: p.id,
-                    label: p.name,
-                    value: p.name,
-                  }))}
-                placeholder="Pilih barang..."
-              />
-            </View>
-            <View style={[styles.inputContainer]}>
-              <ThemedText type="defaultSemiBold">Qty</ThemedText>
-              <ThemedTextInput
-                placeholder="5"
-                keyboardType="numeric"
-                value={item.qtySold ? item.qtySold.toString() : ""}
-                onChangeText={(text) =>
-                  handleItemChange(index, "qtySold", text)
-                }
-              />
-              {item.name && (
-                <ThemedText
-                  type="default"
-                  style={{ fontSize: 12, marginTop: -25, color: "#b7b477ff" }}
-                >
-                  Stok tersedia:{" "}
-                  {item.unitType === "dozens"
-                    ? item.qtyDozens + " losin"
-                    : item.qtySack + " sak"}
-                </ThemedText>
-              )}
-            </View>
-            <View style={[styles.inputContainer]}>
-              <ThemedText type="defaultSemiBold">Tipe Satuan</ThemedText>
-              <UnitRadioButton
-                selected={item.unitType}
-                onChange={(value) => handleItemRadioChange(index, value)}
-              />
-            </View>
-            <View style={[styles.inputContainer]}>
-              <ThemedText type="defaultSemiBold">Harga</ThemedText>
-              <ThemedTextInput
-                placeholder="15000"
-                keyboardType="numeric"
-                value={item.amountSold ? item.amountSold.toString() : ""}
-                onChangeText={(text) =>
-                  handleItemChange(index, "amountSold", text)
-                }
-              />
-            </View>
-            <ThemedView style={styles.iconContainer}>
-              <Pressable
-                style={[styles.iconButton]}
-                onPress={() => handleRemoveItem(index)}
-              >
-                <Ionicons name="trash-outline" size={16} color="#FF3B30" />
-                <ThemedText type="default">Hapus</ThemedText>
-              </Pressable>
-            </ThemedView>
-          </View>
+          <SaleFormItemRow
+            key={index}
+            index={index}
+            item={item}
+            products={products}
+            formSale={formSale}
+            onChange={handleItemChange}
+            onRemove={handleRemoveItem}
+            onPickerChange={handleItemPickerChange}
+            onUnitChange={handleItemRadioChange}
+          />
         ))}
       </View>
       <Pressable

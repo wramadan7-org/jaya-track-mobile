@@ -1,7 +1,11 @@
 import { useProductStore } from "@/stores/product-store";
 import { useLocalSearchParams } from "expo-router";
-import { StyleSheet } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+} from "react-native";
 import { moderateScale } from "react-native-size-matters";
 import { ProductFormComponent } from "../components/form/product-form";
 import { ThemedText } from "../components/themed-text";
@@ -14,23 +18,31 @@ export default function FormProductModalScreen() {
   const productToEdit = id ? products.find((p) => p.id === id) : undefined;
 
   return (
-    <KeyboardAwareScrollView contentContainerStyle={{ flexGrow: 1 }}>
-      <ThemedView style={styles.container}>
-        <ThemedText
-          type="title"
-          style={{
-            paddingTop: moderateScale(36),
-          }}
-        >
-          {id ? "Edit Barang" : "Tambah Barang"}
-        </ThemedText>
-        <ProductFormComponent
-          initialData={productToEdit}
-          isEditMode={!!id}
-          id={id}
-        />
-      </ThemedView>
-    </KeyboardAwareScrollView>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      style={{ flex: 1 }}
+    >
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        keyboardShouldPersistTaps="handled"
+      >
+        <ThemedView style={styles.container}>
+          <ThemedText
+            type="title"
+            style={{
+              paddingTop: moderateScale(36),
+            }}
+          >
+            {id ? "Edit Barang" : "Tambah Barang"}
+          </ThemedText>
+          <ProductFormComponent
+            initialData={productToEdit}
+            isEditMode={!!id}
+            id={id}
+          />
+        </ThemedView>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
