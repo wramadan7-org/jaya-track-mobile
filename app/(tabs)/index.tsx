@@ -35,7 +35,7 @@ export default function DashboardScreen() {
       return (
         sum +
         sale.items
-          .filter((s) => s.unitType === "dozens")
+          .filter((s) => s.unitType === "sack")
           .reduce((s, i) => s + i.qtySold, 0)
       );
     }, 0);
