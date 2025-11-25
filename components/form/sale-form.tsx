@@ -15,6 +15,30 @@ type SaleFormProps = {
   id?: string;
 };
 
+export type ItemSaleType = Product & {
+  qtySold: number;
+  amountSold: number;
+  unitType: "dozens" | "sack";
+  subtotal: number;
+};
+
+const initialItem: ItemSaleType = {
+  id: "",
+  name: "",
+  fillPerSack: 0,
+  basePrice: 0,
+  qtyDozens: 0,
+  qtySack: 0,
+  unitType: "dozens",
+  qtySold: 0,
+  amountSold: 0,
+  subtotal: 0,
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  targetPricePerDozens: 0,
+  targetPricePerSack: 0,
+};
+
 export const SaleFormComponent = ({
   initialData,
   isEditMode = false,
@@ -44,27 +68,7 @@ export const SaleFormComponent = ({
   }, [initialData]);
 
   const handleAddItem = useCallback(() => {
-    const newItem: Product & {
-      qtySold: number;
-      amountSold: number;
-      unitType: "dozens" | "sack";
-      subtotal: number;
-    } = {
-      id: "",
-      name: "",
-      fillPerSack: 0,
-      basePrice: 0,
-      qtyDozens: 0,
-      qtySack: 0,
-      unitType: "dozens",
-      qtySold: 0,
-      amountSold: 0,
-      subtotal: 0,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      targetPricePerDozens: 0,
-      targetPricePerSack: 0,
-    };
+    const newItem: ItemSaleType = initialItem;
 
     setFormSale((prev) => ({
       ...prev,
@@ -74,9 +78,9 @@ export const SaleFormComponent = ({
 
   const handleParentChange = useCallback(
     (key: string, value: string | number) => {
-      setFormSale({ ...formSale, [key]: value });
+      setFormSale((prev) => ({ ...prev, [key]: value }));
     },
-    [formSale]
+    []
   );
 
   const handleItemChange = useCallback(
@@ -90,91 +94,113 @@ export const SaleFormComponent = ({
       }),
       value: string | number
     ) => {
-      const items = [...formSale.items];
-      const item = items[index];
+      setFormSale((prev) => {
+        const items = prev.items ? [...prev.items] : [];
+        const item = {
+          ...(items[index] as Product & {
+            qtySold: number;
+            amountSold: number;
+            subtotal: number;
+            unitType: "dozens" | "sack";
+          }),
+        };
 
-      // 🔹 ubah tipe data otomatis untuk number
-      if (
-        key === "qtySold" ||
-        key === "amountSold" ||
-        key === "subtotal" ||
-        key === "fillPerSack" ||
-        key === "basePrice" ||
-        key === "qtyDozens" ||
-        key === "qtySack"
-      ) {
-        (item[key] as number) = Number(value);
-      } else {
-        (item[key] as any) = value;
-      }
+        if (
+          key === "qtySold" ||
+          key === "amountSold" ||
+          key === "subtotal" ||
+          key === "fillPerSack" ||
+          key === "basePrice" ||
+          key === "qtyDozens" ||
+          key === "qtySack"
+        ) {
+          (item as any)[key] = Number(value);
+        } else {
+          (item as any)[key] = value;
+        }
 
-      setFormSale((prev) => ({
-        ...prev,
-        items,
-      }));
+        items[index] = item;
+        const total = items.reduce(
+          (sum, it: any) =>
+            sum + Number(it.qtySold || 0) * Number(it.amountSold || 0),
+          0
+        );
+        return { ...prev, items, totalAmount: total };
+      });
     },
-    [formSale.items]
+    []
   );
 
   const handleItemPickerChange = useCallback(
     (index: number, value: string) => {
-      const items = [...formSale.items];
-      let item = items[index];
+      setFormSale((prev) => {
+        const items = [...prev.items];
+        const current = items[index] ? { ...items[index] } : initialItem;
+        const selected = products.find((p) => p.name === value);
+        if (!selected) return prev;
 
-      const selected = products.find((p) => p.name === value);
+        items[index] = {
+          ...selected,
+          qtySold: current.qtySold ?? 0,
+          unitType: current.unitType ?? "dozens",
+          amountSold:
+            (current.unitType ?? "dozens") === "sack"
+              ? selected.targetPricePerSack
+              : selected.targetPricePerDozens,
+          subtotal: current.subtotal ?? 0,
+        };
 
-      if (!selected) return;
+        const total = items.reduce(
+          (sum, it) =>
+            sum + Number(it.qtySold || 0) * Number(it.amountSold || 0),
+          0
+        );
 
-      items[index] = {
-        ...selected,
-        subtotal: item.subtotal,
-        qtySold: item.qtySold,
-        amountSold:
-          formSale.items[index].unitType === "sack"
-            ? selected.targetPricePerSack
-            : selected.targetPricePerDozens,
-        unitType: item.unitType,
-      };
-
-      setFormSale((prev) => ({ ...prev, items }));
+        return { ...prev, items, totalAmount: total };
+      });
     },
-    [formSale.items, products]
+    [products]
   );
 
   const handleItemRadioChange = useCallback(
     (index: number, value: UnitType) => {
-      handleItemChange(index, "unitType", value);
+      setFormSale((prev) => {
+        const items = [...prev.items];
+        const item = { ...items[index] };
+        item.unitType = value;
 
-      // Jika ganti tipe satuan, update juga harga sesuai tipe
-      const selected = products.find(
-        (p) => p.name === formSale.items[index].name
-      );
+        const selected = products.find((p) => p.name === item.name);
+        if (selected) {
+          item.amountSold =
+            value === "sack"
+              ? selected.targetPricePerSack
+              : selected.targetPricePerDozens;
+        }
 
-      if (!selected) return;
-
-      handleItemChange(
-        index,
-        "amountSold",
-        value === "sack"
-          ? selected.targetPricePerSack
-          : selected.targetPricePerDozens
-      );
+        items[index] = item;
+        const total = items.reduce(
+          (sum, it: any) =>
+            sum + Number(it.qtySold || 0) * Number(it.amountSold || 0),
+          0
+        );
+        return { ...prev, items, totalAmount: total };
+      });
     },
-    [formSale.items, handleItemChange, products]
+    [products]
   );
 
-  const handleRemoveItem = useCallback(
-    (index: number) => {
-      const items = [...formSale.items];
+  const handleRemoveItem = useCallback((index: number) => {
+    setFormSale((prev) => {
+      const items = [...prev.items];
       items.splice(index, 1);
       const total = items.reduce(
-        (sum, item) => sum + item.qtySold * item.amountSold,
+        (sum, item) =>
+          sum + Number(item.qtySold || 0) * Number(item.amountSold || 0),
         0
       );
-      setFormSale({ ...formSale, items, totalAmount: total });
-    },
-    [formSale]
-  );
+      return { ...prev, items, totalAmount: total };
+    });
+  }, []);
 
   const handleSubmit = () => {
     try {
