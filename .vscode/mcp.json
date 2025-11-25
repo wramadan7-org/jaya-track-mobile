@@ -1,0 +1,8 @@
+{
+  "servers": {
+    "Sentry": {
+      "url": "https://mcp.sentry.dev/mcp/wahyu-ramadan/react-native",
+      "type": "http"
+    }
+  }
+}
