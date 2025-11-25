@@ -3,16 +3,18 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { useProductStore, type Product } from "./product-store";
 
+export type SaleItem = (Product & {
+  qtySold: number;
+  amountSold: number;
+  unitType: "dozens" | "sack";
+  subtotal: number;
+})[];
+
 export type Sale = {
   id: string;
   store: string;
   area: string;
-  items: (Product & {
-    qtySold: number;
-    amountSold: number;
-    unitType: "dozens" | "sack";
-    subtotal: number;
-  })[];
+  items: SaleItem;
   totalAmount: number;
   createdAt: Date;
   updatedAt: Date;
@@ -248,25 +250,25 @@ export const useSalesStore = create<SaleStore>()(
             const fill = item.fillPerSack;
 
             let modal = 0;
-            let keuntungan = 0;
+            let profit = 0;
 
             if (item.unitType === "dozens") {
               modal = base; // modal per losin
-              keuntungan = (item.amountSold - modal) * item.qtySold;
+              profit = (item.amountSold - modal) * item.qtySold;
             } else {
               modal = base * fill; // modal per sak
-              keuntungan = (item.amountSold * fill - modal) * item.qtySold;
+              profit = (item.amountSold * fill - modal) * item.qtySold;
             }
 
-            totalProfit += keuntungan;
+            totalProfit += profit;
           });
         });
 
         return totalProfit;
       },
       getTodayNetProfit: (operationalCost = 0) => {
-        const labaKotor = get().getTodayProfit();
-        return labaKotor - operationalCost;
+        const grossProfit = get().getTodayProfit();
+        return grossProfit - operationalCost;
       },
       resetSales: () => set({ sales: [] }),
     }),
