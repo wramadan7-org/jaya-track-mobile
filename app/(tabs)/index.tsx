@@ -53,7 +53,7 @@ export default function DashboardScreen() {
         <ThemedText style={styles.cardTitle}>Ringkasan Hari Ini</ThemedText>
         <ThemedText style={styles.cardRow}>
           Total Penjualan:
-          <ThemedText style={[styles.highlightValue, { color: "green" }]}>
+          <ThemedText style={[styles.highlightValue, { color: "#16A34A" }]}>
             {" "}
             Rp {totalTodayAmount.toLocaleString()}
           </ThemedText>
@@ -82,7 +82,7 @@ export default function DashboardScreen() {
         </ThemedView>
         <ThemedText style={styles.cardRow}>
           Total Laba:
-          <ThemedText style={[styles.highlightValue, { color: "green" }]}>
+          <ThemedText style={[styles.highlightValue, { color: "#16A34A" }]}>
             {" "}
             Rp {profitToday.toLocaleString()}
           </ThemedText>
@@ -122,7 +122,7 @@ export default function DashboardScreen() {
             <ThemedText style={styles.listSub}>{lastSale.area}</ThemedText>
             <ThemedText style={[styles.cardRow, { marginTop: 6 }]}>
               Total:
-              <ThemedText style={[styles.highlightValue, { color: "green" }]}>
+              <ThemedText style={[styles.highlightValue, { color: "#16A34A" }]}>
                 {" "}
                 Rp {lastSale.totalAmount.toLocaleString()}
               </ThemedText>
@@ -155,7 +155,7 @@ export default function DashboardScreen() {
           return (
             <View key={p.id} style={styles.listItem}>
               <ThemedText style={styles.listTitle}>{p.name}</ThemedText>
-              <ThemedText style={[styles.listSub, { color: "green" }]}>
+              <ThemedText style={[styles.listSub, { color: "#16A34A" }]}>
                 Laba: Rp {profit.toLocaleString()}
               </ThemedText>
             </View>
