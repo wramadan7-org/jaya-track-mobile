@@ -37,20 +37,42 @@ export default function SaleDetailModalScreen() {
       <ThemedView
         style={[styles.headerCard, { backgroundColor: cardBackground }]}
       >
-        <ThemedText type="default" style={styles.title}>
-          Detail Penjualan
+        <ThemedView
+          style={{
+            flexDirection: "row",
+            alignItems: "flex-start",
+            justifyContent: "space-between",
+          }}
+        >
+          <ThemedView>
+            <ThemedText
+              type="default"
+              style={[
+                styles.info,
+                { color: "#666", fontSize: moderateScale(13), marginBottom: 0 },
+              ]}
+            >
+              {dayjs(sale.createdAt).format("DD MMM YYYY HH:mm")}
+            </ThemedText>
+          </ThemedView>
+          <ThemedText type="default" style={styles.total}>
+            Rp {sale.totalAmount.toLocaleString("id-ID")}
+          </ThemedText>
+        </ThemedView>
+        <ThemedText
+          type="defaultSemiBold"
+          style={[styles.title, { marginTop: 0 }]}
+        >
+          {sale.store}
         </ThemedText>
-        <ThemedText type="default" style={styles.info}>
-          Toko: {sale.store}
-        </ThemedText>
-        <ThemedText type="default" style={styles.info}>
-          Area: {sale.area}
-        </ThemedText>
-        <ThemedText type="default" style={styles.info}>
-          Tanggal: {dayjs(sale.createdAt).format("DD MMM YYYY HH:mm")}
-        </ThemedText>
-        <ThemedText type="default" style={styles.total}>
-          Total: Rp {sale.totalAmount.toLocaleString("id-ID")}
+        <ThemedText
+          type="default"
+          style={[
+            styles.info,
+            { color: "#666", fontSize: moderateScale(13), marginBottom: 0 },
+          ]}
+        >
+          {sale.area}
         </ThemedText>
       </ThemedView>
 
@@ -103,14 +125,12 @@ const styles = StyleSheet.create({
   headerCard: {
     borderRadius: 12,
     padding: moderateScale(16),
-    marginBottom: moderateScale(16),
     borderColor: "#ccc",
     borderWidth: 1,
   },
   title: {
     fontSize: moderateScale(18),
     fontWeight: "700",
-    marginBottom: moderateScale(8),
   },
   info: {
     fontSize: moderateScale(14),
@@ -120,7 +140,6 @@ const styles = StyleSheet.create({
     fontSize: moderateScale(16),
     fontWeight: "700",
     color: "#16A34A",
-    marginTop: moderateScale(8),
   },
   rowBetween: {
     flexDirection: "row",
