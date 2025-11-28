@@ -92,17 +92,21 @@ export default function BroughtScreen() {
           >
             <ThemedView style={{ width: "80%" }}>
               <ThemedText type="defaultSemiBold">
-                Nama: {item?.name || "-"}
+                {item?.name || "-"}
+              </ThemedText>
+              <ThemedText type="default" style={{ color: "#666" }}>
+                {item.fillPerSack} losin / sak
               </ThemedText>
               <ThemedText type="defaultSemiBold">
-                Jumlah: {item?.qtyDozens || 0} losin /{" "}
-                {Math.floor(item?.qtySack || 0)} sak{" "}
+                {Math.floor(item?.qtySack) === 0 && item.qtyDozens > 0
+                  ? ``
+                  : `0 sak`}
                 {item?.qtySack > 0 && item?.qtyDozens % item?.fillPerSack !== 0
-                  ? `(+ ${item?.qtyDozens % item?.fillPerSack} losin)`
+                  ? `${Math.floor(item?.qtyDozens % item?.fillPerSack)} losin`
                   : ""}
               </ThemedText>
               <ThemedText type="defaultSemiBold">
-                Harga Dasar: {item?.basePrice?.toLocaleString("id-ID") || "-"}
+                Dasar • Rp {item?.basePrice?.toLocaleString("id-ID") || "-"}
               </ThemedText>
             </ThemedView>
             <ThemedText
@@ -134,13 +138,13 @@ export default function BroughtScreen() {
               alignItems: "center",
               justifyContent: "space-between",
               borderTopWidth: 1,
-              borderColor: "#EEE",
+              borderColor: "#ccc",
               paddingTop: 8,
               marginTop: 8,
             }}
           >
             <ThemedView>
-              <ThemedText type="defaultSemiBold">Harga Target Ecer</ThemedText>
+              <ThemedText type="defaultSemiBold">Target Ecer</ThemedText>
               <ThemedText type="default">
                 Rp {item?.targetPricePerDozens?.toLocaleString("id-ID") || "-"}
               </ThemedText>
@@ -148,13 +152,13 @@ export default function BroughtScreen() {
             <ThemedView
               style={{
                 borderEndWidth: 1,
-                borderColor: "#EEE",
+                borderColor: "#ccc",
                 width: 1,
                 height: 40,
               }}
             />
             <ThemedView>
-              <ThemedText type="defaultSemiBold">Harga Target Sak</ThemedText>
+              <ThemedText type="defaultSemiBold">Target Sak</ThemedText>
               <ThemedText type="default">
                 Rp {item?.targetPricePerSack?.toLocaleString("id-ID")}
               </ThemedText>
