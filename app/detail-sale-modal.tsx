@@ -75,7 +75,8 @@ export default function SaleDetailModalScreen() {
                 {item.qtySold} {item.unitType === "dozens" ? "lusin" : "sak"}
               </ThemedText>
               <ThemedText type="default" style={styles.itemPrice}>
-                x Rp {item.amountSold.toLocaleString("id-ID")}
+                {item.unitType === "sack" && `x ${item.fillPerSack}`} x Rp{" "}
+                {item.amountSold.toLocaleString("id-ID")}
               </ThemedText>
             </ThemedView>
           </CardContainer>
