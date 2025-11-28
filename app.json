@@ -4,7 +4,7 @@
     "slug": "JayaTrack",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/jaya-track-icon.png",
+    "icon": "./assets/images/jaya-track-apk-icon.png",
     "scheme": "jayatrack",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
