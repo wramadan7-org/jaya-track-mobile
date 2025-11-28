@@ -107,7 +107,7 @@ const SaleFormItemRow = ({
             Stok tersedia:{" "}
             {item.unitType === "dozens"
               ? item.qtyDozens + " losin"
-              : item.qtySack + " sak"}
+              : Math.floor(item.qtySack) + " sak"}
           </ThemedText>
         )}
       </ThemedView>
