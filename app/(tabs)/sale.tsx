@@ -71,7 +71,10 @@ export default function SaleScreenScreen() {
             <CardContainer>
               {/* Header toko + total */}
               <ThemedView style={styles.saleHeader}>
-                <ThemedText type="defaultSemiBold" style={styles.saleStore}>
+                <ThemedText
+                  type="defaultSemiBold"
+                  style={[styles.saleStore, { width: "50%" }]}
+                >
                   {item?.store}
                 </ThemedText>
                 <ThemedText
@@ -80,6 +83,7 @@ export default function SaleScreenScreen() {
                     styles.saleTotal,
                     {
                       color: "#16A34A",
+                      width: "50%",
                     },
                   ]}
                 >
@@ -194,6 +198,7 @@ const styles = StyleSheet.create({
   },
   saleTotal: {
     fontSize: 15,
+    textAlign: "right",
   },
   saleArea: {
     fontSize: 14,
