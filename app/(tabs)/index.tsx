@@ -6,6 +6,7 @@ import { useProductStore } from "@/stores/product-store";
 import { useSalesStore } from "@/stores/sales-store";
 import { useMemo } from "react";
 import { StyleSheet, View } from "react-native";
+import { moderateScale } from "react-native-size-matters";
 
 export default function DashboardScreen() {
   const { products } = useProductStore();
@@ -52,7 +53,7 @@ export default function DashboardScreen() {
         <ThemedText style={styles.cardTitle}>Ringkasan Hari Ini</ThemedText>
         <ThemedText style={styles.cardRow}>
           Total Penjualan:
-          <ThemedText style={styles.highlightValue}>
+          <ThemedText style={[styles.highlightValue, { color: "green" }]}>
             {" "}
             Rp {totalTodayAmount.toLocaleString()}
           </ThemedText>
@@ -60,7 +61,7 @@ export default function DashboardScreen() {
         <ThemedView style={styles.flexRow}>
           <ThemedView>
             <ThemedText style={styles.cardRow}>Sak Terjual:</ThemedText>
-            <ThemedText type="default" style={styles.highlightValue}>
+            <ThemedText style={styles.highlightValue}>
               {totalItemSold.soldSacks} sak
             </ThemedText>
           </ThemedView>
@@ -104,7 +105,8 @@ export default function DashboardScreen() {
               <ThemedText style={styles.listTitle}>{p.name}</ThemedText>
               <ThemedText style={styles.listSub}>
                 Sisa: {Math.floor(remainingSacks)} sak{" "}
-                {remainingDozens > 0 && ` / ${remainingDozens} losin`}
+                {remainingDozens > 0 &&
+                  ` / ${Math.floor(remainingDozens)} losin`}
               </ThemedText>
             </View>
           );
@@ -120,7 +122,7 @@ export default function DashboardScreen() {
             <ThemedText style={styles.listSub}>{lastSale.area}</ThemedText>
             <ThemedText style={[styles.cardRow, { marginTop: 6 }]}>
               Total:
-              <ThemedText style={styles.highlightValue}>
+              <ThemedText style={[styles.highlightValue, { color: "green" }]}>
                 {" "}
                 Rp {lastSale.totalAmount.toLocaleString()}
               </ThemedText>
@@ -166,13 +168,12 @@ export default function DashboardScreen() {
 
 const styles = StyleSheet.create({
   cardTitle: {
-    fontSize: 18,
+    fontSize: moderateScale(18),
     fontWeight: "bold",
     marginBottom: 12,
   },
   cardRow: {
-    fontSize: 16,
-    lineHeight: 22,
+    lineHeight: moderateScale(22),
     marginBottom: 4,
   },
   flexRow: {
@@ -186,7 +187,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   emptyText: {
-    fontSize: 15,
+    fontSize: moderateScale(15),
     opacity: 0.6,
   },
   listItem: {
@@ -196,11 +197,11 @@ const styles = StyleSheet.create({
     borderColor: "#ccc",
   },
   listTitle: {
-    fontSize: 16,
+    fontSize: moderateScale(16),
     fontWeight: "600",
   },
   listSub: {
-    fontSize: 14,
+    fontSize: moderateScale(14),
     opacity: 0.8,
     marginTop: 2,
   },
