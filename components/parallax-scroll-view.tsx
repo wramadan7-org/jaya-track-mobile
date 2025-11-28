@@ -72,7 +72,6 @@ export default function ParallaxScrollView({
       keyboardShouldPersistTaps="handled"
       contentContainerStyle={{
         flexGrow: 1,
-        paddingVertical: moderateScale(36),
         gap: 16,
       }}
       refreshControl={
@@ -105,7 +104,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: moderateScale(32),
+    paddingHorizontal: moderateScale(20),
     paddingVertical: moderateScale(36),
     gap: 16,
     overflow: "hidden",
