@@ -7,6 +7,7 @@ import CardContainer from "@/components/ui/card-container";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Fonts } from "@/constants/theme";
 import { useProductStore } from "@/stores/product-store";
+import { remainingProduct } from "@/utils/remaining-product";
 import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import { useCallback, useMemo, useState } from "react";
@@ -80,126 +81,138 @@ export default function BroughtScreen() {
           </Link>
         </ThemedView>
       }
-      renderItem={({ item }) => (
-        <CardContainer>
-          <ThemedView
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              backgroundColor: "transparant",
-            }}
-          >
-            <ThemedView style={{ width: "80%" }}>
-              <ThemedText type="defaultSemiBold">
-                {item?.name || "-"}
-              </ThemedText>
-              <ThemedText type="default" style={{ color: "#666" }}>
-                {item.fillPerSack} losin / sak
-              </ThemedText>
-              <ThemedText type="defaultSemiBold">
-                {Math.floor(item?.qtySack) === 0 && item.qtyDozens > 0
-                  ? ``
-                  : `${Math.floor(item?.qtySack)} sak`}
-                {item?.qtySack > 0 && item?.qtyDozens % item?.fillPerSack !== 0
-                  ? `${Math.floor(item?.qtyDozens % item?.fillPerSack)} losin`
-                  : ""}
-              </ThemedText>
-              <ThemedText type="defaultSemiBold">
-                Dasar • Rp {item?.basePrice?.toLocaleString("id-ID") || "-"}
-              </ThemedText>
-            </ThemedView>
-            <ThemedText
-              type="defaultSemiBold"
+      renderItem={({ item }) => {
+        const { remainingSacks, remainingDozens } = remainingProduct(
+          item.qtySack,
+          item.qtyDozens,
+          item.fillPerSack
+        );
+
+        return (
+          <CardContainer>
+            <ThemedView
               style={{
-                fontSize: moderateScale(12),
-                backgroundColor:
-                  item?.qtyDozens === 0 && item?.qtySack === 0
-                    ? "#FF3B3020"
-                    : "#34C75920",
-                paddingHorizontal: moderateScale(6),
-                paddingVertical: moderateScale(2),
-                borderRadius: 4,
-                color:
-                  item?.qtyDozens === 0 && item?.qtySack === 0
-                    ? "#FF3B30"
-                    : "#34C759",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                backgroundColor: "transparant",
               }}
             >
-              {item?.qtyDozens === 0 && item?.qtySack === 0
-                ? "Habis"
-                : "Tersedia"}
-            </ThemedText>
-          </ThemedView>
-          <ThemedView
-            style={{
-              gap: 4,
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-              borderTopWidth: 1,
-              borderColor: "#ccc",
-              paddingTop: 8,
-              marginTop: 8,
-            }}
-          >
-            <ThemedView>
-              <ThemedText type="defaultSemiBold">Target Ecer</ThemedText>
-              <ThemedText type="default">
-                Rp {item?.targetPricePerDozens?.toLocaleString("id-ID") || "-"}
+              <ThemedView style={{ width: "80%" }}>
+                <ThemedText type="defaultSemiBold">
+                  {item?.name || "-"}
+                </ThemedText>
+                <ThemedText type="default" style={{ color: "#666" }}>
+                  {item.fillPerSack} losin / sak
+                </ThemedText>
+                <ThemedText type="defaultSemiBold">
+                  {Math.floor(remainingSacks) === 0 && remainingDozens > 0
+                    ? ``
+                    : `${Math.floor(remainingSacks)} sak`}
+                  {remainingSacks > 0 && remainingDozens !== 0
+                    ? `${remainingDozens} losin`
+                    : ""}
+                </ThemedText>
+                <ThemedText type="defaultSemiBold">
+                  Dasar • Rp {item?.basePrice?.toLocaleString("id-ID") || "-"}
+                </ThemedText>
+              </ThemedView>
+              <ThemedText
+                type="defaultSemiBold"
+                style={{
+                  fontSize: moderateScale(12),
+                  backgroundColor:
+                    item?.qtyDozens === 0 && item?.qtySack === 0
+                      ? "#FF3B3020"
+                      : "#34C75920",
+                  paddingHorizontal: moderateScale(6),
+                  paddingVertical: moderateScale(2),
+                  borderRadius: 4,
+                  color:
+                    item?.qtyDozens === 0 && item?.qtySack === 0
+                      ? "#FF3B30"
+                      : "#34C759",
+                }}
+              >
+                {item?.qtyDozens === 0 && item?.qtySack === 0
+                  ? "Habis"
+                  : "Tersedia"}
               </ThemedText>
             </ThemedView>
             <ThemedView
               style={{
-                borderEndWidth: 1,
+                gap: 4,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                borderTopWidth: 1,
                 borderColor: "#ccc",
-                width: 1,
-                height: 40,
+                paddingTop: 8,
+                marginTop: 8,
               }}
-            />
-            <ThemedView>
-              <ThemedText type="defaultSemiBold">Target Sak</ThemedText>
-              <ThemedText type="default">
-                Rp {item?.targetPricePerSack?.toLocaleString("id-ID")}
-              </ThemedText>
-            </ThemedView>
-          </ThemedView>
-          <ThemedView style={styles.iconContainer}>
-            <Link
-              disabled={disableAction}
-              href={{
-                pathname: "/form-product-modal",
-                params: { id: item?.id },
-              }}
-              asChild
             >
+              <ThemedView>
+                <ThemedText type="defaultSemiBold">Target Ecer</ThemedText>
+                <ThemedText type="default">
+                  Rp{" "}
+                  {item?.targetPricePerDozens?.toLocaleString("id-ID") || "-"}
+                </ThemedText>
+              </ThemedView>
+              <ThemedView
+                style={{
+                  borderEndWidth: 1,
+                  borderColor: "#ccc",
+                  width: 1,
+                  height: 40,
+                }}
+              />
+              <ThemedView>
+                <ThemedText type="defaultSemiBold">Target Sak</ThemedText>
+                <ThemedText type="default">
+                  Rp {item?.targetPricePerSack?.toLocaleString("id-ID")}
+                </ThemedText>
+              </ThemedView>
+            </ThemedView>
+            <ThemedView style={styles.iconContainer}>
+              <Link
+                disabled={disableAction}
+                href={{
+                  pathname: "/form-product-modal",
+                  params: { id: item?.id },
+                }}
+                asChild
+              >
+                <Pressable
+                  style={[
+                    styles.iconButton,
+                    disableAction && styles.iconDisabled,
+                  ]}
+                >
+                  <Ionicons
+                    name="create-outline"
+                    size={16}
+                    color={disableAction ? "#A0A0A0" : "#007AFF"}
+                  />
+                </Pressable>
+              </Link>
               <Pressable
+                disabled={disableAction}
                 style={[
                   styles.iconButton,
                   disableAction && styles.iconDisabled,
                 ]}
+                onPress={() => deleteProduct(item?.id)}
               >
                 <Ionicons
-                  name="create-outline"
+                  name="trash-outline"
                   size={16}
-                  color={disableAction ? "#A0A0A0" : "#007AFF"}
+                  color={disableAction ? "#C0C0C0" : "#FF3B30"}
                 />
               </Pressable>
-            </Link>
-            <Pressable
-              disabled={disableAction}
-              style={[styles.iconButton, disableAction && styles.iconDisabled]}
-              onPress={() => deleteProduct(item?.id)}
-            >
-              <Ionicons
-                name="trash-outline"
-                size={16}
-                color={disableAction ? "#C0C0C0" : "#FF3B30"}
-              />
-            </Pressable>
-          </ThemedView>
-        </CardContainer>
-      )}
+            </ThemedView>
+          </CardContainer>
+        );
+      }}
       ListEmptyComponent={
         <EmptyState title="Barang belum ada" message="Harap tambahkan barang" />
       }

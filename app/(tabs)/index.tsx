@@ -4,8 +4,11 @@ import { ThemedView } from "@/components/themed-view";
 import CardContainer from "@/components/ui/card-container";
 import { useProductStore } from "@/stores/product-store";
 import { useSalesStore } from "@/stores/sales-store";
+import { remainingProduct } from "@/utils/remaining-product";
+import { Ionicons } from "@expo/vector-icons";
+import { Link } from "expo-router";
 import { useMemo } from "react";
-import { StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import { moderateScale } from "react-native-size-matters";
 
 export default function DashboardScreen() {
@@ -60,7 +63,7 @@ export default function DashboardScreen() {
         </ThemedText>
         <ThemedView style={styles.flexRow}>
           <ThemedView>
-            <ThemedText style={styles.cardRow}>Sak Terjual:</ThemedText>
+            <ThemedText style={styles.cardRow}>Sak Terjual</ThemedText>
             <ThemedText style={styles.highlightValue}>
               {totalItemSold.soldSacks} sak
             </ThemedText>
@@ -74,7 +77,7 @@ export default function DashboardScreen() {
             }}
           />
           <ThemedView>
-            <ThemedText style={styles.cardRow}>Losin Terjual:</ThemedText>
+            <ThemedText style={styles.cardRow}>Losin Terjual</ThemedText>
             <ThemedText type="default" style={styles.highlightValue}>
               {totalItemSold.soldDozens} losin
             </ThemedText>
@@ -94,42 +97,70 @@ export default function DashboardScreen() {
           <ThemedText style={styles.emptyText}>Tidak ada produk</ThemedText>
         )}
         {products.map((p) => {
-          const remainingSacks = p.qtySack;
-          const remainingDozens =
-            p?.qtySack > 0 && p?.qtyDozens % p.fillPerSack !== 0
-              ? p?.qtyDozens % p?.fillPerSack
-              : 0;
+          const { remainingSacks, remainingDozens } = remainingProduct(
+            p.qtySack,
+            p.qtyDozens,
+            p.fillPerSack
+          );
 
           return (
             <View key={p.id} style={styles.listItem}>
               <ThemedText style={styles.listTitle}>{p.name}</ThemedText>
               <ThemedText style={styles.listSub}>
-                Sisa: {Math.floor(remainingSacks)} sak{" "}
-                {remainingDozens > 0 &&
-                  ` / ${Math.floor(remainingDozens)} losin`}
+                Sisa:{" "}
+                {Math.floor(remainingSacks) === 0 && remainingDozens > 0
+                  ? ``
+                  : `${Math.floor(remainingSacks)} sak`}
+                {remainingSacks > 0 && remainingDozens !== 0
+                  ? `${remainingDozens} losin`
+                  : ""}
               </ThemedText>
             </View>
           );
         })}
       </CardContainer>
-      <CardContainer style={{ marginBottom: 18 }}>
-        <ThemedText style={styles.cardTitle}>Penjualan Terakhir</ThemedText>
-        {!lastSale ? (
-          <ThemedText style={styles.emptyText}>Belum ada penjualan</ThemedText>
-        ) : (
-          <View>
-            <ThemedText style={styles.listTitle}>{lastSale.store}</ThemedText>
-            <ThemedText style={styles.listSub}>{lastSale.area}</ThemedText>
-            <ThemedText style={[styles.cardRow, { marginTop: 6 }]}>
-              Total:
-              <ThemedText style={[styles.highlightValue, { color: "#16A34A" }]}>
-                {" "}
-                Rp {lastSale.totalAmount.toLocaleString()}
+      <Link
+        href={{ pathname: "/detail-sale-modal", params: { id: lastSale.id } }}
+        asChild
+      >
+        <Pressable>
+          <CardContainer style={{ marginBottom: 18 }}>
+            <ThemedView
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "flex-start",
+              }}
+            >
+              <ThemedText style={styles.cardTitle}>
+                Penjualan Terakhir
               </ThemedText>
-            </ThemedText>
-          </View>
-        )}
-      </CardContainer>
+              <Ionicons name="chevron-forward" size={20} color="#999" />
+            </ThemedView>
+            {!lastSale ? (
+              <ThemedText style={styles.emptyText}>
+                Belum ada penjualan
+              </ThemedText>
+            ) : (
+              <ThemedView>
+                <ThemedText style={styles.listTitle}>
+                  {lastSale.store}
+                </ThemedText>
+                <ThemedText style={styles.listSub}>{lastSale.area}</ThemedText>
+                <ThemedText style={[styles.cardRow, { marginTop: 6 }]}>
+                  Total:
+                  <ThemedText
+                    style={[styles.highlightValue, { color: "#16A34A" }]}
+                  >
+                    {" "}
+                    Rp {lastSale.totalAmount.toLocaleString()}
+                  </ThemedText>
+                </ThemedText>
+              </ThemedView>
+            )}
+          </CardContainer>
+        </Pressable>
+      </Link>
       <CardContainer>
         <ThemedText style={styles.cardTitle}>Laba per Produk</ThemedText>
         {todaySales.length === 0 && (
