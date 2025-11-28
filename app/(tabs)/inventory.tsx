@@ -100,7 +100,7 @@ export default function BroughtScreen() {
               <ThemedText type="defaultSemiBold">
                 {Math.floor(item?.qtySack) === 0 && item.qtyDozens > 0
                   ? ``
-                  : `0 sak`}
+                  : `${Math.floor(item?.qtySack)} sak`}
                 {item?.qtySack > 0 && item?.qtyDozens % item?.fillPerSack !== 0
                   ? `${Math.floor(item?.qtyDozens % item?.fillPerSack)} losin`
                   : ""}
