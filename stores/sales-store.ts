@@ -22,6 +22,7 @@ export type Sale = {
 
 type SaleStore = {
   sales: Sale[];
+  hasHydrated: boolean;
   addSale: (
     sale: Omit<Sale, "totalAmount" | "createdAt" | "updatedAt">
   ) => void;
@@ -39,6 +40,7 @@ export const useSalesStore = create<SaleStore>()(
   persist(
     (set, get) => ({
       sales: [],
+      hasHydrated: false,
       addSale: (sale) =>
         set((state) => {
           const productStore = useProductStore.getState();
@@ -237,27 +239,27 @@ export const useSalesStore = create<SaleStore>()(
           };
         }),
       getTodayProfit: () => {
-        const now = new Date().toDateString();
-        const salesToday = get().sales.filter(
+        const now = new Date()?.toDateString();
+        const salesToday = get()?.sales?.filter(
           (s) => new Date(s.createdAt).toDateString() === now
         );
 
         let totalProfit = 0;
 
-        salesToday.forEach((sale) => {
-          sale.items.forEach((item) => {
-            const base = item.price;
-            const fill = item.fillPerSack;
+        salesToday?.forEach((sale) => {
+          sale?.items?.forEach((item) => {
+            const base = item?.price || 0;
+            const fill = item?.fillPerSack || 0;
 
             let modal = 0;
             let profit = 0;
 
-            if (item.unitType === "dozens") {
+            if (item?.unitType === "dozens") {
               modal = base; // modal per losin
-              profit = (item.amountSold - modal) * item.qtySold;
+              profit = (item?.amountSold - modal) * item?.qtySold;
             } else {
               modal = base * fill; // modal per sak
-              profit = (item.amountSold * fill - modal) * item.qtySold;
+              profit = (item?.amountSold * fill - modal) * item?.qtySold;
             }
 
             totalProfit += profit;
@@ -267,7 +269,7 @@ export const useSalesStore = create<SaleStore>()(
         return totalProfit;
       },
       getTodayNetProfit: (operationalCost = 0) => {
-        const grossProfit = get().getTodayProfit();
+        const grossProfit = get()?.getTodayProfit() || 0;
         return grossProfit - operationalCost;
       },
       resetSales: () => set({ sales: [] }),
@@ -276,12 +278,13 @@ export const useSalesStore = create<SaleStore>()(
       name: "sales-store",
       storage: zustandStorage,
       onRehydrateStorage: () => (state) => {
-        if (state?.sales) {
+        if (state) {
           state.sales = state.sales.map((sale) => ({
             ...sale,
             createdAt: new Date(sale.createdAt),
             updatedAt: new Date(sale.updatedAt),
           }));
+          state.hasHydrated = true;
         }
       },
     }

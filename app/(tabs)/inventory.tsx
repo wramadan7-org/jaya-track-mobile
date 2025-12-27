@@ -5,7 +5,9 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import CardContainer from "@/components/ui/card-container";
 import { EmptyState } from "@/components/ui/empty-state";
+import Loading from "@/components/ui/loading";
 import { Fonts } from "@/constants/theme";
+import { useAppHydrated } from "@/hooks/use-app-hydrate";
 import { useProductStore } from "@/stores/product-store";
 import { remainingProduct } from "@/utils/remaining-product";
 import { Ionicons } from "@expo/vector-icons";
@@ -15,6 +17,7 @@ import { moderateScale } from "react-native-size-matters";
 
 export default function BroughtScreen() {
   const { products, deleteProduct, resetProducts } = useProductStore();
+  const ready = useAppHydrated();
 
   const [disableAction, setDisableAction] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -45,6 +48,8 @@ export default function BroughtScreen() {
         })
       : [];
   }, [products]);
+
+  if (!ready) return <Loading text="Menyiapkan data..." />;
 
   return (
     <FlatListScrollView

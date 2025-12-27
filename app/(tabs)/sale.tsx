@@ -5,7 +5,9 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import CardContainer from "@/components/ui/card-container";
 import { EmptyState } from "@/components/ui/empty-state";
+import Loading from "@/components/ui/loading";
 import { Fonts } from "@/constants/theme";
+import { useAppHydrated } from "@/hooks/use-app-hydrate";
 import { useThemeColor } from "@/hooks/use-theme-color";
 import { useSalesStore } from "@/stores/sales-store";
 import { Link } from "expo-router";
@@ -14,6 +16,7 @@ import { useCallback, useMemo, useState } from "react";
 export default function SaleScreenScreen() {
   const subText = useThemeColor({ light: "#666", dark: "#aaa" }, "text");
   const { sales, resetSales } = useSalesStore();
+  const ready = useAppHydrated();
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -31,6 +34,8 @@ export default function SaleScreenScreen() {
         )
       : [];
   }, [sales]);
+
+  if (!ready) return <Loading text="Menyiapkan data..." />;
 
   return (
     <FlatListScrollView

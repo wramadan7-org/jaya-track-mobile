@@ -2,6 +2,8 @@ import ParallaxScrollView from "@/components/parallax-scroll-view";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import CardContainer from "@/components/ui/card-container";
+import Loading from "@/components/ui/loading";
+import { useAppHydrated } from "@/hooks/use-app-hydrate";
 import { useProductStore } from "@/stores/product-store";
 import { useSalesStore } from "@/stores/sales-store";
 import { remainingProduct } from "@/utils/remaining-product";
@@ -14,13 +16,14 @@ import { moderateScale } from "react-native-size-matters";
 export default function DashboardScreen() {
   const { products } = useProductStore();
   const { sales, getTodayProfit } = useSalesStore();
+  const ready = useAppHydrated();
 
   const today = new Date().toDateString();
-  const todaySales = sales.filter(
-    (s) => new Date(s.createdAt).toDateString() === today
+  const todaySales = sales?.filter(
+    (s) => new Date(s?.createdAt)?.toDateString() === today
   );
 
-  const totalTodayAmount = todaySales.reduce(
+  const totalTodayAmount = todaySales?.reduce(
     (sum, sale) => sum + sale.totalAmount,
     0
   );
@@ -30,8 +33,8 @@ export default function DashboardScreen() {
       return (
         sum +
         sale.items
-          .filter((s) => s.unitType === "dozens")
-          .reduce((s, i) => s + i.qtySold, 0)
+          .filter((s) => s?.unitType === "dozens")
+          .reduce((s, i) => s + i?.qtySold, 0)
       );
     }, 0);
 
@@ -39,15 +42,17 @@ export default function DashboardScreen() {
       return (
         sum +
         sale.items
-          .filter((s) => s.unitType === "sack")
-          .reduce((s, i) => s + i.qtySold, 0)
+          .filter((s) => s?.unitType === "sack")
+          .reduce((s, i) => s + i?.qtySold, 0)
       );
     }, 0);
     return { soldDozens, soldSacks };
   }, [todaySales]);
 
-  const lastSale = sales[sales.length - 1];
+  const lastSale = sales[sales?.length - 1];
   const profitToday = getTodayProfit();
+
+  if (!ready) return <Loading text="Menyiapkan data..." />;
 
   return (
     <ParallaxScrollView>
@@ -58,7 +63,7 @@ export default function DashboardScreen() {
           Total Penjualan:
           <ThemedText style={[styles.highlightValue, { color: "#16A34A" }]}>
             {" "}
-            Rp {totalTodayAmount.toLocaleString()}
+            Rp {totalTodayAmount?.toLocaleString() || 0}
           </ThemedText>
         </ThemedText>
         <ThemedView style={styles.flexRow}>
@@ -79,7 +84,7 @@ export default function DashboardScreen() {
           <ThemedView>
             <ThemedText style={styles.cardRow}>Losin Terjual</ThemedText>
             <ThemedText type="default" style={styles.highlightValue}>
-              {totalItemSold.soldDozens} losin
+              {totalItemSold?.soldDozens || 0} losin
             </ThemedText>
           </ThemedView>
         </ThemedView>
@@ -87,25 +92,25 @@ export default function DashboardScreen() {
           Total Laba:
           <ThemedText style={[styles.highlightValue, { color: "#16A34A" }]}>
             {" "}
-            Rp {profitToday.toLocaleString()}
+            Rp {profitToday?.toLocaleString() || 0}
           </ThemedText>
         </ThemedText>
       </CardContainer>
       <CardContainer style={{ marginBottom: 18 }}>
         <ThemedText style={styles.cardTitle}>Stok Barang Dibawa</ThemedText>
-        {products.length === 0 && (
+        {products?.length === 0 && (
           <ThemedText style={styles.emptyText}>Tidak ada produk</ThemedText>
         )}
-        {products.map((p) => {
+        {products?.map((p) => {
           const { remainingSacks, remainingDozens } = remainingProduct(
-            p.qtySack,
-            p.qtyDozens,
-            p.fillPerSack
+            p?.qtySack,
+            p?.qtyDozens,
+            p?.fillPerSack
           );
 
           return (
-            <View key={p.id} style={styles.listItem}>
-              <ThemedText style={styles.listTitle}>{p.name}</ThemedText>
+            <View key={p?.id} style={styles.listItem}>
+              <ThemedText style={styles.listTitle}>{p?.name}</ThemedText>
               <ThemedText style={styles.listSub}>
                 Sisa:{" "}
                 {Math.floor(remainingSacks) === 0 && remainingDozens > 0
@@ -120,7 +125,7 @@ export default function DashboardScreen() {
         })}
       </CardContainer>
       <Link
-        href={{ pathname: "/detail-sale-modal", params: { id: lastSale.id } }}
+        href={{ pathname: "/detail-sale-modal", params: { id: lastSale?.id } }}
         asChild
       >
         <Pressable>
@@ -144,16 +149,16 @@ export default function DashboardScreen() {
             ) : (
               <ThemedView>
                 <ThemedText style={styles.listTitle}>
-                  {lastSale.store}
+                  {lastSale?.store}
                 </ThemedText>
-                <ThemedText style={styles.listSub}>{lastSale.area}</ThemedText>
+                <ThemedText style={styles.listSub}>{lastSale?.area}</ThemedText>
                 <ThemedText style={[styles.cardRow, { marginTop: 6 }]}>
                   Total:
                   <ThemedText
                     style={[styles.highlightValue, { color: "#16A34A" }]}
                   >
                     {" "}
-                    Rp {lastSale.totalAmount.toLocaleString()}
+                    Rp {lastSale?.totalAmount?.toLocaleString() || 0}
                   </ThemedText>
                 </ThemedText>
               </ThemedView>
@@ -163,31 +168,31 @@ export default function DashboardScreen() {
       </Link>
       <CardContainer>
         <ThemedText style={styles.cardTitle}>Laba per Produk</ThemedText>
-        {todaySales.length === 0 && (
+        {todaySales?.length === 0 && (
           <ThemedText style={styles.emptyText}>Tidak ada data</ThemedText>
         )}
-        {products.map((p) => {
+        {products?.map((p) => {
           let profit = 0;
 
-          todaySales.forEach((sale) => {
-            sale.items
-              .filter((i) => i.id === p.id)
-              .forEach((i) => {
-                const price = p.price;
-                const fillPerSack = p.fillPerSack;
+          todaySales?.forEach((sale) => {
+            sale?.items
+              ?.filter((i) => i?.id === p?.id)
+              ?.forEach((i) => {
+                const price = p?.price || 0;
+                const fillPerSack = p?.fillPerSack || 0;
                 profit +=
-                  i.unitType === "dozens"
-                    ? (i.amountSold - price) * i.qtySold
-                    : (i.amountSold * fillPerSack - price * fillPerSack) *
-                      i.qtySold;
+                  i?.unitType === "dozens"
+                    ? (i?.amountSold - price) * i?.qtySold
+                    : (i?.amountSold * fillPerSack - price * fillPerSack) *
+                      i?.qtySold;
               });
           });
 
           return (
-            <View key={p.id} style={styles.listItem}>
-              <ThemedText style={styles.listTitle}>{p.name}</ThemedText>
+            <View key={p?.id} style={styles.listItem}>
+              <ThemedText style={styles.listTitle}>{p?.name}</ThemedText>
               <ThemedText style={[styles.listSub, { color: "#16A34A" }]}>
-                Laba: Rp {profit.toLocaleString()}
+                Laba: Rp {profit?.toLocaleString() || 0}
               </ThemedText>
             </View>
           );

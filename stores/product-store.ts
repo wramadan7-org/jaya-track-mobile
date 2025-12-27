@@ -15,6 +15,7 @@ export type Product = {
 
 type ProductStore = {
   products: Product[];
+  hasHydrated: boolean;
   addProduct: (product: Omit<Product, "createdAt" | "updatedAt">) => void;
   updateProduct: (
     id: string,
@@ -28,6 +29,7 @@ export const useProductStore = create<ProductStore>()(
   persist(
     (set) => ({
       products: [],
+      hasHydrated: false,
       addProduct: (product) =>
         set((state) => {
           const now = new Date();
@@ -61,12 +63,13 @@ export const useProductStore = create<ProductStore>()(
       storage: zustandStorage,
       // 🔹 konversi string menjadi Date saat load dari storage
       onRehydrateStorage: () => (state) => {
-        if (state?.products) {
+        if (state) {
           state.products = state?.products?.map((product) => ({
             ...product,
             createdAt: new Date(product?.createdAt),
             updatedAt: new Date(product?.updatedAt),
           }));
+          state.hasHydrated = true;
         }
       },
     }
