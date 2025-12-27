@@ -42,19 +42,18 @@ export default function SaleDetailModalScreen() {
             flexDirection: "row",
             alignItems: "flex-start",
             justifyContent: "space-between",
+            backgroundColor: "transparent",
           }}
         >
-          <ThemedView>
-            <ThemedText
-              type="default"
-              style={[
-                styles.info,
-                { color: "#666", fontSize: moderateScale(13), marginBottom: 0 },
-              ]}
-            >
-              {dayjs(sale.createdAt).format("DD MMM YYYY HH:mm")}
-            </ThemedText>
-          </ThemedView>
+          <ThemedText
+            type="default"
+            style={[
+              styles.info,
+              { color: "#666", fontSize: moderateScale(13), marginBottom: 0 },
+            ]}
+          >
+            {dayjs(sale.createdAt).format("DD MMM YYYY HH:mm")}
+          </ThemedText>
           <ThemedText type="default" style={styles.total}>
             Rp {sale.totalAmount.toLocaleString("id-ID")}
           </ThemedText>

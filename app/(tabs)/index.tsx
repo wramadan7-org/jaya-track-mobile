@@ -173,12 +173,12 @@ export default function DashboardScreen() {
             sale.items
               .filter((i) => i.id === p.id)
               .forEach((i) => {
-                const basePrice = p.basePrice;
+                const price = p.price;
                 const fillPerSack = p.fillPerSack;
                 profit +=
                   i.unitType === "dozens"
-                    ? (i.amountSold - basePrice) * i.qtySold
-                    : (i.amountSold * fillPerSack - basePrice * fillPerSack) *
+                    ? (i.amountSold - price) * i.qtySold
+                    : (i.amountSold * fillPerSack - price * fillPerSack) *
                       i.qtySold;
               });
           });

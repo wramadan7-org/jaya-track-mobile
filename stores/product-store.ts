@@ -6,9 +6,7 @@ export type Product = {
   id: string;
   name: string;
   fillPerSack: number;
-  basePrice: number;
-  targetPricePerDozens: number;
-  targetPricePerSack: number;
+  price: number;
   qtyDozens: number;
   qtySack: number;
   createdAt: Date;

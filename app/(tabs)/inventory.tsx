@@ -95,10 +95,10 @@ export default function BroughtScreen() {
                 flexDirection: "row",
                 justifyContent: "space-between",
                 alignItems: "center",
-                backgroundColor: "transparant",
+                backgroundColor: "transparent",
               }}
             >
-              <ThemedView style={{ width: "80%" }}>
+              <ThemedView style={{ maxWidth: "75%" }}>
                 <ThemedText type="defaultSemiBold">
                   {item?.name || "-"}
                 </ThemedText>
@@ -106,6 +106,11 @@ export default function BroughtScreen() {
                   {item.fillPerSack} losin / sak
                 </ThemedText>
                 <ThemedText type="defaultSemiBold">
+                  <ThemedText
+                    style={{ color: "#666", fontSize: moderateScale(12) }}
+                  >
+                    Stok:{" "}
+                  </ThemedText>
                   {Math.floor(remainingSacks) === 0 && remainingDozens > 0
                     ? ``
                     : `${Math.floor(remainingSacks)} sak`}
@@ -113,20 +118,19 @@ export default function BroughtScreen() {
                     ? `${remainingDozens} losin`
                     : ""}
                 </ThemedText>
-                <ThemedText type="defaultSemiBold">
-                  Dasar • Rp {item?.basePrice?.toLocaleString("id-ID") || "-"}
-                </ThemedText>
               </ThemedView>
               <ThemedText
                 type="defaultSemiBold"
                 style={{
                   fontSize: moderateScale(12),
+                  marginBottom: "auto",
+                  textAlign: "right",
                   backgroundColor:
                     item?.qtyDozens === 0 && item?.qtySack === 0
                       ? "#FF3B3020"
                       : "#34C75920",
-                  paddingHorizontal: moderateScale(6),
-                  paddingVertical: moderateScale(2),
+                  paddingHorizontal: moderateScale(10),
+                  paddingVertical: moderateScale(1),
                   borderRadius: 4,
                   color:
                     item?.qtyDozens === 0 && item?.qtySack === 0
@@ -138,40 +142,6 @@ export default function BroughtScreen() {
                   ? "Habis"
                   : "Tersedia"}
               </ThemedText>
-            </ThemedView>
-            <ThemedView
-              style={{
-                gap: 4,
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-                borderTopWidth: 1,
-                borderColor: "#ccc",
-                paddingTop: 8,
-                marginTop: 8,
-              }}
-            >
-              <ThemedView>
-                <ThemedText type="defaultSemiBold">Target Ecer</ThemedText>
-                <ThemedText type="default">
-                  Rp{" "}
-                  {item?.targetPricePerDozens?.toLocaleString("id-ID") || "-"}
-                </ThemedText>
-              </ThemedView>
-              <ThemedView
-                style={{
-                  borderEndWidth: 1,
-                  borderColor: "#ccc",
-                  width: 1,
-                  height: 40,
-                }}
-              />
-              <ThemedView>
-                <ThemedText type="defaultSemiBold">Target Sak</ThemedText>
-                <ThemedText type="default">
-                  Rp {item?.targetPricePerSack?.toLocaleString("id-ID")}
-                </ThemedText>
-              </ThemedView>
             </ThemedView>
             <ThemedView style={styles.iconContainer}>
               <Link
@@ -209,6 +179,21 @@ export default function BroughtScreen() {
                   color={disableAction ? "#C0C0C0" : "#FF3B30"}
                 />
               </Pressable>
+              <ThemedText
+                type="defaultSemiBold"
+                style={{ fontSize: moderateScale(14), marginLeft: "auto" }}
+              >
+                <ThemedText
+                  style={{
+                    color: "#666",
+                    fontWeight: "thin",
+                    fontSize: moderateScale(12),
+                  }}
+                >
+                  Harga:{" "}
+                </ThemedText>
+                Rp {item?.price?.toLocaleString("id-ID") || "-"}
+              </ThemedText>
             </ThemedView>
           </CardContainer>
         );

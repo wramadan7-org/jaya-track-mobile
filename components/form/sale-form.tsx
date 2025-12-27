@@ -1,7 +1,7 @@
 import { Product, useProductStore } from "@/stores/product-store";
 import { useSalesStore, type Sale } from "@/stores/sales-store";
 import { useCallback, useEffect, useState } from "react";
-import { Alert, Pressable, StyleSheet, View } from "react-native";
+import { Alert, Pressable, StyleSheet } from "react-native";
 import { moderateScale } from "react-native-size-matters";
 import { ThemedText } from "../themed-text";
 import { ThemedTextInput } from "../themed-text-input";
@@ -26,7 +26,7 @@ const initialItem: ItemSaleType = {
   id: "",
   name: "",
   fillPerSack: 0,
-  basePrice: 0,
+  price: 0,
   qtyDozens: 0,
   qtySack: 0,
   unitType: "dozens",
@@ -35,8 +35,6 @@ const initialItem: ItemSaleType = {
   subtotal: 0,
   createdAt: new Date(),
   updatedAt: new Date(),
-  targetPricePerDozens: 0,
-  targetPricePerSack: 0,
 };
 
 export const SaleFormComponent = ({
@@ -110,7 +108,7 @@ export const SaleFormComponent = ({
           key === "amountSold" ||
           key === "subtotal" ||
           key === "fillPerSack" ||
-          key === "basePrice" ||
+          key === "price" ||
           key === "qtyDozens" ||
           key === "qtySack"
         ) {
@@ -143,10 +141,7 @@ export const SaleFormComponent = ({
           ...selected,
           qtySold: current.qtySold ?? 0,
           unitType: current.unitType ?? "dozens",
-          amountSold:
-            (current.unitType ?? "dozens") === "sack"
-              ? selected.targetPricePerSack
-              : selected.targetPricePerDozens,
+          amountSold: selected.price,
           subtotal: current.subtotal ?? 0,
         };
 
@@ -171,10 +166,7 @@ export const SaleFormComponent = ({
 
         const selected = products.find((p) => p.name === item.name);
         if (selected) {
-          item.amountSold =
-            value === "sack"
-              ? selected.targetPricePerSack
-              : selected.targetPricePerDozens;
+          item.amountSold = selected.price;
         }
 
         items[index] = item;
@@ -264,7 +256,7 @@ export const SaleFormComponent = ({
 
   return (
     <ThemedView style={styles.container}>
-      <View style={[styles.inputContainer]}>
+      <ThemedView style={[styles.inputContainer]}>
         <ThemedText type="defaultSemiBold">Nama Toko</ThemedText>
         <ThemedTextInput
           style={styles.input}
@@ -272,8 +264,8 @@ export const SaleFormComponent = ({
           value={formSale.store}
           onChangeText={(text) => handleParentChange("store", text)}
         />
-      </View>
-      <View style={[styles.inputContainer]}>
+      </ThemedView>
+      <ThemedView style={[styles.inputContainer]}>
         <ThemedText type="defaultSemiBold">Area</ThemedText>
         <ThemedTextInput
           style={styles.input}
@@ -281,8 +273,8 @@ export const SaleFormComponent = ({
           value={formSale.area}
           onChangeText={(text) => handleParentChange("area", text)}
         />
-      </View>
-      <View style={{ gap: 15 }}>
+      </ThemedView>
+      <ThemedView style={{ gap: 15 }}>
         {!!formSale.items.length && (
           <ThemedText type="defaultSemiBold">Item Penjualan</ThemedText>
         )}
@@ -299,7 +291,7 @@ export const SaleFormComponent = ({
             onUnitChange={handleItemRadioChange}
           />
         ))}
-      </View>
+      </ThemedView>
       <Pressable
         onPress={handleAddItem}
         style={[styles.button, styles.buttonAdd]}

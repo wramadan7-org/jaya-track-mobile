@@ -26,9 +26,7 @@ export const ProductFormComponent = ({
     name: "",
     qtyDozens: 0,
     qtySack: 0,
-    basePrice: 0,
-    targetPricePerDozens: 0,
-    targetPricePerSack: 0,
+    price: 0,
     fillPerSack: 0,
   });
 
@@ -38,9 +36,7 @@ export const ProductFormComponent = ({
         name: initialData.name,
         qtyDozens: initialData.qtyDozens,
         qtySack: initialData.qtySack,
-        basePrice: initialData.basePrice,
-        targetPricePerDozens: initialData.targetPricePerDozens,
-        targetPricePerSack: initialData.targetPricePerSack,
+        price: initialData.price,
         fillPerSack: initialData.fillPerSack,
       });
     }
@@ -78,7 +74,7 @@ export const ProductFormComponent = ({
   };
 
   const handleSubmit = () => {
-    const { name, qtyDozens, qtySack, basePrice, fillPerSack } = formProduct;
+    const { name, qtyDozens, qtySack, price, fillPerSack } = formProduct;
 
     try {
       if (!name || !fillPerSack) {
@@ -94,7 +90,7 @@ export const ProductFormComponent = ({
         return;
       }
 
-      if (!basePrice || !basePrice) {
+      if (!price || !price) {
         Alert.alert("Form tidak lengkap", "Harga barang belum diisi");
         return;
       }
@@ -111,9 +107,7 @@ export const ProductFormComponent = ({
           name: "",
           qtyDozens: 0,
           qtySack: 0,
-          basePrice: 0,
-          targetPricePerDozens: 0,
-          targetPricePerSack: 0,
+          price: 0,
           fillPerSack: 0,
         });
         Alert.alert("Sukses", "Barang berhasil ditambahkan");
@@ -207,47 +201,10 @@ export const ProductFormComponent = ({
         <ThemedTextInput
           style={styles.input}
           placeholder="15000"
-          value={formProduct.basePrice ? formProduct.basePrice.toString() : ""}
-          onChangeText={(text) => handleChange("basePrice", Number(text))}
+          value={formProduct.price ? formProduct.price.toString() : ""}
+          onChangeText={(text) => handleChange("price", Number(text))}
           keyboardType="numeric"
         />
-      </View>
-      <View style={styles.inputGroup}>
-        <ThemedText type="defaultSemiBold">Harga Target</ThemedText>
-        <View style={styles.inputWrapper}>
-          <View style={[styles.inputContainer]}>
-            <ThemedText type="defaultSemiBold">Ecer</ThemedText>
-            <ThemedTextInput
-              style={styles.input}
-              placeholder="15000"
-              value={
-                formProduct.targetPricePerDozens
-                  ? formProduct.targetPricePerDozens.toString()
-                  : ""
-              }
-              onChangeText={(text) =>
-                handleChange("targetPricePerDozens", Number(text))
-              }
-              keyboardType="numeric"
-            />
-          </View>
-          <View style={[styles.inputContainer]}>
-            <ThemedText type="defaultSemiBold">Sak</ThemedText>
-            <ThemedTextInput
-              style={styles.input}
-              placeholder="83000"
-              value={
-                formProduct.targetPricePerSack
-                  ? formProduct.targetPricePerSack.toString()
-                  : ""
-              }
-              onChangeText={(text) =>
-                handleChange("targetPricePerSack", Number(text))
-              }
-              keyboardType="numeric"
-            />
-          </View>
-        </View>
       </View>
       <Pressable
         onPress={handleSubmit}

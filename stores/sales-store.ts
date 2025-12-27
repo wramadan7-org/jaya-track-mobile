@@ -246,7 +246,7 @@ export const useSalesStore = create<SaleStore>()(
 
         salesToday.forEach((sale) => {
           sale.items.forEach((item) => {
-            const base = item.basePrice;
+            const base = item.price;
             const fill = item.fillPerSack;
 
             let modal = 0;

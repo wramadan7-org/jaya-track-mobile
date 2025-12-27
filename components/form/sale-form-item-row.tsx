@@ -129,7 +129,7 @@ const SaleFormItemRow = ({
       </ThemedView>
       <ThemedView style={styles.iconContainer}>
         <Pressable style={[styles.iconButton]} onPress={() => onRemove(index)}>
-          <Ionicons name="trash-outline" size={16} color="#FF3B30" />
+          <Ionicons name="trash-outline" size={16} color="#fff" />
           <ThemedText type="default">Hapus</ThemedText>
         </Pressable>
       </ThemedView>
@@ -158,6 +158,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 5,
     borderRadius: 8,
-    backgroundColor: "#eebabaed",
+    backgroundColor: "#f90303ff",
   },
 });
